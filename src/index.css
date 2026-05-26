@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold-400: #ffe082;
+  --color-gold-500: #dfb15b;
+  --color-gold-600: #b8860b;
+  
+  --color-zinc-950: #070d0c;
+  --color-zinc-900: #0c1f19;
+  --color-zinc-800: #0d261e;
+  --color-zinc-700: #12362a;
+  
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-title: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+/* Estilos de reset e scrollbar */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #000000;
+  background-image: radial-gradient(circle at 50% 0%, #0a0a0a 0%, #000000 100%);
+  color: #f8fafc;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar Customizado */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-zinc-950);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(52, 211, 153, 0.5);
+}
+
+/* Animações Auxiliares */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
