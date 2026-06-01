@@ -140,6 +140,18 @@ function App() {
     if (data) setPalpites(data);
   };
 
+  // Garante que a aba selecionada seja válida após a mudança de jogos (ex: se todos encerrarem em uma rodada)
+  useEffect(() => {
+    if (jogos.length === 0 || rounds.length === 0) return;
+    const activeRounds = rounds.filter(r => jogos.some(j => j.rodada === r && !j.encerrado));
+    const hasEncerradas = jogos.some(j => j.encerrado);
+    const validTabs = [...activeRounds, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
+    
+    if (validTabs.length > 0 && (!selectedRound || !validTabs.includes(selectedRound))) {
+      setSelectedRound(validTabs[0]);
+    }
+  }, [jogos, rounds, selectedRound]);
+
   const refreshJogosOnly = async () => {
     const { data } = await supabase.from('jogos').select('*').order('data_hora', { ascending: true });
     if (data) {
@@ -452,6 +464,14 @@ function App() {
 
   const leaderboard = calculateLeaderboard();
 
+  const calculateDisplayTabs = () => {
+    if (!jogos || jogos.length === 0) return rounds;
+    const activeRounds = rounds.filter(r => jogos.some(j => j.rodada === r && !j.encerrado));
+    const hasEncerradas = jogos.some(j => j.encerrado);
+    return [...activeRounds, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
+  };
+  const displayTabs = calculateDisplayTabs();
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 md:py-12 min-h-screen relative">
       
@@ -629,17 +649,18 @@ function App() {
             
             {/* Navegação por Abas (Rodadas) */}
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin border-b border-white/5">
-              {rounds.map(round => (
+              {displayTabs.map(tab => (
                 <button
-                  key={round}
+                  key={tab}
                   className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer border whitespace-nowrap transition-all ${
-                    selectedRound === round 
+                    selectedRound === tab 
                       ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300' 
                       : 'border-white/5 bg-white/[0.02] text-slate-400 hover:bg-white/[0.05] hover:text-slate-200'
                   }`}
-                  onClick={() => setSelectedRound(round)}
+                  onClick={() => setSelectedRound(tab)}
                 >
-                  {round}
+                  {tab === 'Encerradas' && <span className="mr-1 opacity-70">🔒</span>}
+                  {tab}
                 </button>
               ))}
             </div>
@@ -647,7 +668,13 @@ function App() {
             {/* Listagem dos Jogos */}
             <div className="flex flex-col gap-6">
               {jogos
-                .filter(j => j.rodada === selectedRound)
+                .filter(j => selectedRound === 'Encerradas' ? j.encerrado : (j.rodada === selectedRound && !j.encerrado))
+                .sort((a, b) => {
+                  if (a.grupo && b.grupo && a.grupo !== b.grupo) {
+                    return a.grupo.localeCompare(b.grupo);
+                  }
+                  return new Date(a.data_hora) - new Date(b.data_hora);
+                })
                 .map(jogo => {
                   const golsRealA = jogo.gols_a !== null ? jogo.gols_a : '';
                   const golsRealB = jogo.gols_b !== null ? jogo.gols_b : '';
