@@ -23,6 +23,7 @@ import imgLucas from './assets/Lucas.png';
 import imgMarcelo from './assets/Marcelo.png';
 import imgMarlon from './assets/Marlon.png';
 import imgThaina from './assets/Thaina.png';
+import logoImg from './assets/logo.png';
 
 const avatars = {
   'Marcelo': imgMarcelo,
@@ -489,13 +490,14 @@ function App() {
 
       {/* Cabeçalho */}
       <header className="flex flex-col items-center mb-8 md:mb-10 text-center">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-4xl md:text-5xl animate-float" style={{ textShadow: '0 0 20px rgba(184,115,51,0.5)' }}>🥉⚔️</span>
-          <h1 className="font-title text-3xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-orange-300 via-amber-600 to-yellow-700 bg-clip-text text-transparent" id="main-title">
-            BETS DO BRONZE
-          </h1>
+        <div className="flex items-center justify-center w-full max-w-3xl px-4 mb-2">
+          <img 
+            src={logoImg} 
+            alt="BETS DO BRONZE" 
+            className="w-full h-auto object-contain max-h-[200px] md:max-h-[280px] drop-shadow-[0_0_25px_rgba(184,115,51,0.15)] animate-in fade-in zoom-in duration-500 hover:scale-105 transition-transform cursor-pointer" 
+          />
         </div>
-        <p className="text-slate-400 text-xs md:text-base font-medium max-w-xl mb-6">
+        <p className="text-slate-400 text-xs md:text-base font-medium max-w-xl mb-6 mt-3">
           Onde o bronze chora e o prata é rei! Bolão dos Invocadores: Marcelo, Lucas, Alexandra, Thainá, Keven e Marlon. Façam suas apostas e evitem o demote!
         </p>
         
