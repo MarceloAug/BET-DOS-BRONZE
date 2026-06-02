@@ -724,21 +724,21 @@ function App() {
                       </div>
 
                       {/* Confronto Principal */}
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                      <div className="flex flex-row items-center justify-between gap-2 md:gap-4 mb-6">
                         
                         {/* Time A */}
-                        <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-[42%] text-left md:text-right">
-                          <span className="font-title text-base font-bold text-slate-100 order-1 md:order-1">{jogo.time_a}</span>
+                        <div className="flex items-center justify-end gap-2 md:gap-3 flex-1 text-right">
+                          <span className="hidden md:inline-block font-title text-base font-bold text-slate-100 truncate max-w-[120px] lg:max-w-none">{jogo.time_a}</span>
                           <img 
                             src={`https://flagcdn.com/w40/${jogo.flag_a}.png`} 
                             alt={jogo.time_a} 
-                            className="w-9 h-6 rounded object-cover shadow border border-white/10 shrink-0 order-2 md:order-2"
+                            className="w-8 h-6 md:w-9 md:h-6 rounded object-cover shadow border border-white/10 shrink-0"
                             onError={(e) => { e.target.src = 'https://flagcdn.com/w40/un.png' }}
                           />
                         </div>
 
                         {/* Placar Real / Inputs */}
-                        <div className="flex items-center justify-center gap-2.5 mx-auto py-2 md:py-0">
+                        <div className="flex items-center justify-center gap-2.5 shrink-0 py-0">
                           <div className="flex flex-col items-center gap-2">
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-black/40 px-2 py-0.5 rounded-full border border-white/5">
                               Placar Real
@@ -799,14 +799,14 @@ function App() {
                         </div>
 
                         {/* Time B */}
-                        <div className="flex items-center justify-between md:justify-start gap-3 w-full md:w-[42%] text-left">
+                        <div className="flex items-center justify-start gap-2 md:gap-3 flex-1 text-left">
                           <img 
                             src={`https://flagcdn.com/w40/${jogo.flag_b}.png`} 
                             alt={jogo.time_b} 
-                            className="w-9 h-6 rounded object-cover shadow border border-white/10 shrink-0"
+                            className="w-8 h-6 md:w-9 md:h-6 rounded object-cover shadow border border-white/10 shrink-0"
                             onError={(e) => { e.target.src = 'https://flagcdn.com/w40/un.png' }}
                           />
-                          <span className="font-title text-base font-bold text-slate-100">{jogo.time_b}</span>
+                          <span className="hidden md:inline-block font-title text-base font-bold text-slate-100 truncate max-w-[120px] lg:max-w-none">{jogo.time_b}</span>
                         </div>
                       </div>
 
@@ -845,23 +845,23 @@ function App() {
                             return (
                               <div 
                                 key={friend.id} 
-                                className="flex items-center justify-between p-2.5 rounded-xl border bg-white/[0.01] border-white/[0.02] hover:bg-white/[0.03] transition-all duration-200"
+                                className="flex flex-row md:flex-col items-center justify-between md:justify-center p-2.5 md:p-3 rounded-xl border bg-white/[0.01] border-white/[0.02] hover:bg-white/[0.03] transition-all duration-200 gap-2 md:gap-3"
                               >
-                                <div className="flex items-center gap-2 min-w-0">
+                                <div className="flex flex-row md:flex-col items-center gap-2 md:gap-1 min-w-0 md:w-full">
                                   <img 
                                     src={avatars[friend.nome]} 
                                     alt={friend.nome}
-                                    className="w-10 h-10 rounded-full object-cover border border-zinc-700 shrink-0 shadow-sm cursor-pointer hover:scale-110 hover:border-emerald-400 transition-all duration-300"
+                                    className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-zinc-700 shrink-0 shadow-sm cursor-pointer hover:scale-110 hover:border-emerald-400 transition-all duration-300"
                                     onClick={() => setSelectedImage(avatars[friend.nome])}
                                   />
-                                  <span className="text-xs font-semibold truncate text-slate-300">
+                                  <span className="text-xs md:text-sm font-semibold truncate text-slate-300 w-full text-left md:text-center">
                                     {friend.nome}
                                   </span>
                                 </div>
 
                                 {jogo.encerrado ? (
                                   // Travado após encerrar jogo
-                                  <div className="flex items-center">
+                                  <div className="flex items-center justify-center shrink-0">
                                     <div className="font-title text-xs font-bold bg-black/40 px-2.5 py-1 rounded-md border border-white/[0.03] text-slate-200">
                                       {palpite ? `${palpite.gols_a} x ${palpite.gols_b}` : '- x -'}
                                     </div>
@@ -869,7 +869,7 @@ function App() {
                                   </div>
                                 ) : (
                                   isDrafting ? (
-                                    <div className="flex items-center gap-1.5">
+                                    <div className="flex items-center justify-center gap-1.5 shrink-0">
                                       <input 
                                         type="number"
                                         min="0"
@@ -907,7 +907,7 @@ function App() {
                                       )}
                                     </div>
                                   ) : (
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center justify-center gap-2 shrink-0">
                                       <div className="font-title text-sm font-bold bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 text-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.15)] flex items-center gap-1.5">
                                         <Check size={12} className="text-emerald-400/70" />
                                         {palpite.gols_a} x {palpite.gols_b}
