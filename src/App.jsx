@@ -272,14 +272,50 @@ function App() {
     }
   };
 
-  // Travar / Destravar partida
+  const handleLockMatch = async (e, jogo) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const isLocked = jogo.flag_a && jogo.flag_a.includes('_LOCKED');
+    
+    const senha = window.prompt(`Digite a senha para ${isLocked ? 'destravar' : 'travar'} as apostas:`);
+    if (senha !== 'bronze2026') {
+      showToast('Senha incorreta! Ação bloqueada.', 'error');
+      return;
+    }
+
+    const newFlagA = isLocked ? jogo.flag_a.replace('_LOCKED', '') : `${jogo.flag_a}_LOCKED`;
+
+    setJogos(prev => prev.map(j => j.id === jogo.id ? { ...j, flag_a: newFlagA } : j));
+    
+    try {
+      const { error } = await supabase.from('jogos').update({ flag_a: newFlagA }).eq('id', jogo.id);
+      if (error) throw error;
+      showToast(isLocked ? 'Apostas liberadas!' : 'Apostas travadas (Em Andamento).');
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao travar a partida.', 'error');
+    }
+  };
+
+  // Travar / Destravar partida (Finalizar)
   const handleToggleMatchStatus = async (e, jogoId, isFinished) => {
     e.preventDefault();
     e.stopPropagation();
     
-    const senha = window.prompt(`Digite a senha para ${isFinished ? 'travar' : 'destravar'} as apostas:`);
-    if (senha !== 'bronze2026') {
-      showToast('Senha incorreta! Ação bloqueada.', 'error');
+    // Validar se tem placar antes de finalizar
+    const jogo = jogos.find(j => j.id === jogoId);
+    if (!jogo) return;
+
+    if (isFinished && (
+      jogo.gols_a === null || 
+      jogo.gols_b === null || 
+      jogo.gols_a === '' || 
+      jogo.gols_b === '' || 
+      isNaN(jogo.gols_a) || 
+      isNaN(jogo.gols_b)
+    )) {
+      showToast('Preencha um placar válido antes de finalizar.', 'error');
       return;
     }
 
@@ -288,7 +324,7 @@ function App() {
     try {
       const { error } = await supabase.from('jogos').update({ encerrado: isFinished }).eq('id', jogoId);
       if (error) throw error;
-      showToast(isFinished ? 'Apostas travadas com sucesso!' : 'Apostas reabertas para edição.');
+      showToast(isFinished ? 'Partida finalizada com sucesso!' : 'Partida reaberta para edição.');
     } catch (err) {
       console.error(err);
       showToast('Erro ao alterar status da partida.', 'error');
@@ -457,9 +493,10 @@ function App() {
 
   const calculateDisplayTabs = () => {
     if (!jogos || jogos.length === 0) return rounds;
-    const activeRounds = rounds.filter(r => jogos.some(j => j.rodada === r && !j.encerrado));
+    const hasEmAndamento = jogos.some(j => !j.encerrado && j.flag_a && j.flag_a.includes('_LOCKED'));
+    const activeRounds = rounds.filter(r => jogos.some(j => j.rodada === r && !j.encerrado && !(j.flag_a && j.flag_a.includes('_LOCKED'))));
     const hasEncerradas = jogos.some(j => j.encerrado);
-    return [...activeRounds, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
+    return [...activeRounds, hasEmAndamento ? 'Em Andamento' : null, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
   };
   const displayTabs = calculateDisplayTabs();
 
@@ -660,7 +697,12 @@ function App() {
             {/* Listagem dos Jogos */}
             <div className="flex flex-col gap-6">
               {jogos
-                .filter(j => selectedRound === 'Encerradas' ? j.encerrado : (j.rodada === selectedRound && !j.encerrado))
+                .filter(j => {
+                  const isLocked = j.flag_a && j.flag_a.includes('_LOCKED');
+                  if (selectedRound === 'Encerradas') return j.encerrado;
+                  if (selectedRound === 'Em Andamento') return !j.encerrado && isLocked;
+                  return j.rodada === selectedRound && !j.encerrado && !isLocked;
+                })
                 .sort((a, b) => {
                   if (a.grupo && b.grupo && a.grupo !== b.grupo) {
                     return a.grupo.localeCompare(b.grupo);
@@ -670,12 +712,15 @@ function App() {
                 .map(jogo => {
                   const golsRealA = jogo.gols_a !== null ? jogo.gols_a : '';
                   const golsRealB = jogo.gols_b !== null ? jogo.gols_b : '';
+                  const isLocked = jogo.flag_a && jogo.flag_a.includes('_LOCKED');
+                  const isFinished = jogo.encerrado;
+                  const realFlagA = jogo.flag_a ? jogo.flag_a.replace('_LOCKED', '') : '';
 
                   return (
                     <div 
                       key={jogo.id} 
                       className={`bg-zinc-900/10 border border-white/5 backdrop-blur-md rounded-3xl p-5 md:p-6 shadow-xl relative overflow-hidden border-l-4 ${
-                        jogo.encerrado ? 'border-l-zinc-600' : 'border-l-emerald-400'
+                        isFinished ? 'border-l-zinc-600' : isLocked ? 'border-l-yellow-400' : 'border-l-emerald-400'
                       }`}
                     >
                       {/* Cabeçalho do Card */}
@@ -698,11 +743,13 @@ function App() {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold border ${
-                            jogo.encerrado 
+                            isFinished 
                               ? 'bg-zinc-500/15 text-zinc-400 border-zinc-500/25' 
-                              : 'bg-emerald-400/10 text-emerald-300 border-emerald-400/20'
+                              : isLocked
+                                ? 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20'
+                                : 'bg-emerald-400/10 text-emerald-300 border-emerald-400/20'
                           }`}>
-                            {jogo.encerrado ? (jogo.gols_a !== null && jogo.gols_b !== null ? 'Finalizado' : 'Travado') : 'Aguardando'}
+                            {isFinished ? 'Finalizado' : isLocked ? 'Em Andamento' : 'Aguardando'}
                           </span>
                           <button 
                             type="button"
@@ -722,7 +769,7 @@ function App() {
                         <div className="flex items-center justify-end gap-2 md:gap-3 flex-1 text-right">
                           <span className="hidden md:inline-block font-title text-base font-bold text-slate-100 truncate max-w-[120px] lg:max-w-none">{jogo.time_a}</span>
                           <img 
-                            src={`https://flagcdn.com/w40/${jogo.flag_a}.png`} 
+                            src={`https://flagcdn.com/w40/${realFlagA}.png`} 
                             alt={jogo.time_a} 
                             className="w-8 h-6 md:w-9 md:h-6 rounded object-cover shadow border border-white/10 shrink-0"
                             onError={(e) => { e.target.src = 'https://flagcdn.com/w40/un.png' }}
@@ -736,7 +783,7 @@ function App() {
                               Placar Real
                             </span>
                             <div className="flex items-center gap-1.5">
-                              {jogo.encerrado ? (
+                              {isFinished ? (
                                 <>
                                   <div className="w-14 h-14 bg-black/50 border border-zinc-700/50 rounded-2xl flex items-center justify-center font-title text-2xl font-black text-zinc-400">
                                     {golsRealA !== null ? golsRealA : '-'}
@@ -769,22 +816,42 @@ function App() {
                               )}
                             </div>
                             
-                            {/* Botão de Travar/Destravar Jogo */}
-                            {!jogo.encerrado ? (
-                              <button 
-                                type="button"
-                                onClick={(e) => handleToggleMatchStatus(e, jogo.id, true)}
-                                className="mt-1 flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-[10px] font-bold hover:bg-emerald-500/30 transition-colors cursor-pointer"
-                              >
-                                <Lock size={10} /> Travar Apostas
-                              </button>
-                            ) : (
+                            {/* Botões de Travar Apostas e Finalizar Jogo */}
+                            {!isFinished && (
+                              <div className="flex flex-col gap-1.5 mt-1">
+                                {!isLocked ? (
+                                  <button 
+                                    type="button"
+                                    onClick={(e) => handleLockMatch(e, jogo)}
+                                    className="flex items-center justify-center gap-1.5 px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-[10px] font-bold hover:bg-yellow-500/30 transition-colors cursor-pointer"
+                                  >
+                                    <Lock size={10} /> Travar Apostas
+                                  </button>
+                                ) : (
+                                  <button 
+                                    type="button"
+                                    onClick={(e) => handleLockMatch(e, jogo)}
+                                    className="flex items-center justify-center gap-1.5 px-3 py-1 bg-zinc-800/50 text-zinc-400 border border-zinc-700/50 rounded-full text-[10px] font-bold hover:bg-zinc-700 hover:text-zinc-200 transition-colors cursor-pointer"
+                                  >
+                                    <Unlock size={10} /> Destravar Apostas
+                                  </button>
+                                )}
+                                <button 
+                                  type="button"
+                                  onClick={(e) => handleToggleMatchStatus(e, jogo.id, true)}
+                                  className="flex items-center justify-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-[10px] font-bold hover:bg-emerald-500/30 transition-colors cursor-pointer"
+                                >
+                                  <Check size={10} /> Finalizar Jogo
+                                </button>
+                              </div>
+                            )}
+                            {isFinished && (
                               <button 
                                 type="button"
                                 onClick={(e) => handleToggleMatchStatus(e, jogo.id, false)}
-                                className="mt-1 flex items-center gap-1.5 px-3 py-1 bg-zinc-800/50 text-zinc-400 border border-zinc-700/50 rounded-full text-[10px] font-bold hover:bg-zinc-700 hover:text-zinc-200 transition-colors cursor-pointer"
+                                className="mt-1 flex items-center justify-center gap-1.5 px-3 py-1 bg-zinc-800/50 text-zinc-400 border border-zinc-700/50 rounded-full text-[10px] font-bold hover:bg-zinc-700 hover:text-zinc-200 transition-colors cursor-pointer"
                               >
-                                <Unlock size={10} /> Destravar Apostas
+                                <RefreshCw size={10} /> Reabrir Jogo
                               </button>
                             )}
                           </div>
@@ -812,14 +879,14 @@ function App() {
                           {participantes.map(friend => {
                             const palpite = palpites.find(p => p.jogo_id === jogo.id && p.participante_id === friend.id);
                             const palpiteKey = `${jogo.id}-${friend.id}`;
-                            const isDrafting = editingPalpites.has(palpiteKey) || (!palpite && !jogo.encerrado);
+                            const isDrafting = editingPalpites.has(palpiteKey) || (!palpite && !isFinished && !isLocked);
                             const draft = draftPalpites[palpiteKey];
                             
                             const displayA = draft?.gols_a !== undefined ? draft.gols_a : (palpite?.gols_a !== null ? palpite?.gols_a : '');
                             const displayB = draft?.gols_b !== undefined ? draft.gols_b : (palpite?.gols_b !== null ? palpite?.gols_b : '');
 
                             let ptsBadge = null;
-                            if (jogo.encerrado && palpite && palpite.gols_a !== null && palpite.gols_b !== null) {
+                            if (isFinished && palpite && palpite.gols_a !== null && palpite.gols_b !== null) {
                               const realWinner = Math.sign(jogo.gols_a - jogo.gols_b);
                               const predWinner = Math.sign(palpite.gols_a - palpite.gols_b);
                               
@@ -830,7 +897,7 @@ function App() {
                               } else {
                                 ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-white/5 text-slate-500">0</span>;
                               }
-                            } else if (jogo.encerrado) {
+                            } else if (isFinished || (isLocked && !palpite)) {
                               ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-red-500/10 text-red-400 border border-red-500/20">Sem Palpite</span>;
                             }
 
@@ -851,8 +918,8 @@ function App() {
                                   </span>
                                 </div>
 
-                                {jogo.encerrado ? (
-                                  // Travado após encerrar jogo
+                                {isFinished || isLocked ? (
+                                  // Travado após encerrar jogo ou bloqueado
                                   <div className="flex items-center justify-center shrink-0">
                                     <div className="font-title text-xs font-bold bg-black/40 px-2.5 py-1 rounded-md border border-white/[0.03] text-slate-200">
                                       {palpite ? `${palpite.gols_a} x ${palpite.gols_b}` : '- x -'}
@@ -924,7 +991,12 @@ function App() {
                   );
                 })}
 
-              {jogos.filter(j => j.rodada === selectedRound).length === 0 && (
+              {jogos.filter(j => {
+                  const isLocked = j.flag_a && j.flag_a.includes('_LOCKED');
+                  if (selectedRound === 'Encerradas') return j.encerrado;
+                  if (selectedRound === 'Em Andamento') return !j.encerrado && isLocked;
+                  return j.rodada === selectedRound && !j.encerrado && !isLocked;
+                }).length === 0 && (
                 <div className="text-center text-slate-500 py-10 bg-zinc-900/10 border border-white/5 rounded-3xl text-sm">
                   Nenhum jogo cadastrado nesta rodada.
                 </div>
