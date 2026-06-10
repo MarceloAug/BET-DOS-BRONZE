@@ -277,19 +277,9 @@ function App() {
     e.preventDefault();
     e.stopPropagation();
     
-    // Validar se tem placar antes de finalizar
-    const jogo = jogos.find(j => j.id === jogoId);
-    if (!jogo) return;
-
-    if (isFinished && (
-      jogo.gols_a === null || 
-      jogo.gols_b === null || 
-      jogo.gols_a === '' || 
-      jogo.gols_b === '' || 
-      isNaN(jogo.gols_a) || 
-      isNaN(jogo.gols_b)
-    )) {
-      showToast('Preencha um placar válido antes de finalizar.', 'error');
+    const senha = window.prompt(`Digite a senha para ${isFinished ? 'travar' : 'destravar'} as apostas:`);
+    if (senha !== 'bronze2026') {
+      showToast('Senha incorreta! Ação bloqueada.', 'error');
       return;
     }
 
@@ -298,7 +288,7 @@ function App() {
     try {
       const { error } = await supabase.from('jogos').update({ encerrado: isFinished }).eq('id', jogoId);
       if (error) throw error;
-      showToast(isFinished ? 'Partida finalizada e placar travado!' : 'Partida reaberta para edição.');
+      showToast(isFinished ? 'Apostas travadas com sucesso!' : 'Apostas reabertas para edição.');
     } catch (err) {
       console.error(err);
       showToast('Erro ao alterar status da partida.', 'error');
@@ -712,7 +702,7 @@ function App() {
                               ? 'bg-zinc-500/15 text-zinc-400 border-zinc-500/25' 
                               : 'bg-emerald-400/10 text-emerald-300 border-emerald-400/20'
                           }`}>
-                            {jogo.encerrado ? 'Finalizado' : 'Aguardando'}
+                            {jogo.encerrado ? (jogo.gols_a !== null && jogo.gols_b !== null ? 'Finalizado' : 'Travado') : 'Aguardando'}
                           </span>
                           <button 
                             type="button"
@@ -786,7 +776,7 @@ function App() {
                                 onClick={(e) => handleToggleMatchStatus(e, jogo.id, true)}
                                 className="mt-1 flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-[10px] font-bold hover:bg-emerald-500/30 transition-colors cursor-pointer"
                               >
-                                <Lock size={10} /> Finalizar Jogo
+                                <Lock size={10} /> Travar Apostas
                               </button>
                             ) : (
                               <button 
@@ -794,7 +784,7 @@ function App() {
                                 onClick={(e) => handleToggleMatchStatus(e, jogo.id, false)}
                                 className="mt-1 flex items-center gap-1.5 px-3 py-1 bg-zinc-800/50 text-zinc-400 border border-zinc-700/50 rounded-full text-[10px] font-bold hover:bg-zinc-700 hover:text-zinc-200 transition-colors cursor-pointer"
                               >
-                                <Unlock size={10} /> Reabrir Jogo
+                                <Unlock size={10} /> Destravar Apostas
                               </button>
                             )}
                           </div>
