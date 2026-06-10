@@ -144,9 +144,10 @@ function App() {
   // Garante que a aba selecionada seja válida após a mudança de jogos (ex: se todos encerrarem em uma rodada)
   useEffect(() => {
     if (jogos.length === 0 || rounds.length === 0) return;
-    const activeRounds = rounds.filter(r => jogos.some(j => j.rodada === r && !j.encerrado));
+    const hasEmAndamento = jogos.some(j => !j.encerrado && j.flag_a && j.flag_a.includes('_LOCKED'));
+    const activeRounds = rounds.filter(r => jogos.some(j => j.rodada === r && !j.encerrado && !(j.flag_a && j.flag_a.includes('_LOCKED'))));
     const hasEncerradas = jogos.some(j => j.encerrado);
-    const validTabs = [...activeRounds, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
+    const validTabs = [...activeRounds, hasEmAndamento ? 'Em Andamento' : null, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
     
     if (validTabs.length > 0 && (!selectedRound || !validTabs.includes(selectedRound))) {
       setSelectedRound(validTabs[0]);
