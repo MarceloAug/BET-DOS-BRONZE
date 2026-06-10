@@ -727,20 +727,11 @@ function App() {
                       {/* Cabeçalho do Card */}
                       <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-400 pb-2 border-b border-white/5 mb-4">
                         <div className="flex items-center gap-1.5">
-                          <Calendar size={12} className="text-slate-400" />
                           {jogo.grupo && (
                             <span className="px-1.5 py-0.5 rounded-md bg-sky-500/10 text-sky-400 border border-sky-500/20 text-[9px] font-extrabold">
                               Grupo {jogo.grupo}
                             </span>
                           )}
-                          <span>
-                            {new Date(jogo.data_hora).toLocaleString('pt-BR', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold border ${
