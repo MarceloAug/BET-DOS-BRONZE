@@ -43,6 +43,10 @@ function App() {
   // Regras
   const [showRules, setShowRules] = useState(false);
 
+  // View Switcher
+  const [currentView, setCurrentView] = useState('matches'); // 'matches' | 'champion'
+  const [bolaoConfig, setBolaoConfig] = useState(null);
+
   // Filtros
   const [selectedRound, setSelectedRound] = useState('');
   const [rounds, setRounds] = useState([]);
@@ -106,6 +110,17 @@ function App() {
       if (palpitesErr) throw palpitesErr;
       setPalpites(palpitesData || []);
 
+      // 4. Buscar Configs do Bolão (Campeão)
+      const { data: configData, error: configErr } = await supabase
+        .from('configs_bolao')
+        .select('*')
+        .eq('id', 1)
+        .single();
+      
+      if (!configErr && configData) {
+        setBolaoConfig(configData);
+      }
+
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
       showToast('Erro ao sincronizar com o banco de dados.', 'error');
@@ -127,6 +142,9 @@ function App() {
         refreshJogosOnly();
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'participantes' }, () => {
+        fetchData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'configs_bolao' }, () => {
         fetchData();
       })
       .subscribe();
@@ -468,16 +486,49 @@ function App() {
             map[p.participante_id].exatos += 1;
           } 
           else if (palpiteA !== null && palpiteB !== null) {
-            const realWinner = Math.sign(realA - realB);
-            const palpiteWinner = Math.sign(palpiteA - palpiteB);
+            const realDiff = realA - realB;
+            const palpiteDiff = palpiteA - palpiteB;
+            const realWinner = Math.sign(realDiff);
+            const palpiteWinner = Math.sign(palpiteDiff);
             
             if (realWinner === palpiteWinner) {
-              map[p.participante_id].pontos += 1;
-              map[p.participante_id].vencedores += 1;
+              // Empates incorretos dão 0 pontos
+              if (realWinner !== 0) {
+                // Acertou a diferença de gols? (Ex: jogo 3x1 [diff 2], palpite 2x0 [diff 2])
+                if (realDiff === palpiteDiff) {
+                  map[p.participante_id].pontos += 2;
+                  map[p.participante_id].vencedores += 1;
+                } else {
+                  // Apenas acertou o vencedor
+                  map[p.participante_id].pontos += 1;
+                  map[p.participante_id].vencedores += 1;
+                }
+              }
             }
           }
         }
       });
+
+      // Cálculo de pontos do Campeão e Finalistas
+      if (bolaoConfig) {
+        participantes.forEach(p => {
+          if (!map[p.id]) return;
+          
+          // Campeão (10 pts)
+          if (bolaoConfig.campeao_real && p.palpite_campeao === bolaoConfig.campeao_real) {
+            map[p.id].pontos += 10;
+          }
+          
+          // Finalistas (3 pts cada, ordem irrelevante)
+          const realFinalists = [bolaoConfig.finalista_1_real, bolaoConfig.finalista_2_real].filter(Boolean);
+          if (p.palpite_finalista_1 && realFinalists.includes(p.palpite_finalista_1)) {
+            map[p.id].pontos += 3;
+          }
+          if (p.palpite_finalista_2 && realFinalists.includes(p.palpite_finalista_2)) {
+            map[p.id].pontos += 3;
+          }
+        });
+      }
 
       return Object.values(map).sort((a, b) => {
         if (b.pontos !== a.pontos) return b.pontos - a.pontos;
@@ -491,6 +542,17 @@ function App() {
   };
 
   const leaderboard = calculateLeaderboard();
+
+  const allTeams = React.useMemo(() => {
+    const teams = {};
+    jogos.forEach(j => {
+      if (j.time_a && !teams[j.time_a]) teams[j.time_a] = j.flag_a;
+      if (j.time_b && !teams[j.time_b]) teams[j.time_b] = j.flag_b;
+    });
+    return Object.entries(teams)
+      .map(([name, flag]) => ({ name, flag }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [jogos]);
 
   const calculateDisplayTabs = () => {
     if (!jogos || jogos.length === 0) return rounds;
@@ -549,6 +611,29 @@ function App() {
             <RefreshCw size={12} />
           </button>
         </div>
+        {/* Abas de Navegação Principais */}
+        <div className="flex bg-black/40 p-1 rounded-2xl border border-white/5 mt-6 w-full max-w-sm mx-auto">
+          <button
+            onClick={() => setCurrentView('matches')}
+            className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all ${
+              currentView === 'matches'
+                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-[0_0_15px_rgba(52,211,153,0.15)]'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            Arena (Jogos)
+          </button>
+          <button
+            onClick={() => setCurrentView('champion')}
+            className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all ${
+              currentView === 'champion'
+                ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)]'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            Saguão (Finais)
+          </button>
+        </div>
       </header>
 
       {/* Modal de Regras */}
@@ -562,8 +647,9 @@ function App() {
               <p>O funcionamento da pontuação é o seguinte:</p>
               <ul className="list-disc list-inside space-y-3 ml-1">
                 <li><strong className="text-emerald-400">Acerto Exato (3 pontos):</strong> Você acerta o placar exato da partida. <br/><span className="text-slate-400 ml-4">Ex: Jogo 2x1, seu palpite 2x1.</span></li>
-                <li><strong className="text-emerald-400">Acerto do Vencedor ou Empate (1 ponto):</strong> Você erra o placar exato, mas acerta o time vencedor ou se foi empate. <br/><span className="text-slate-400 ml-4">Ex: Jogo 2x1, seu palpite 1x0 ou 3x1.</span></li>
-                <li><strong className="text-slate-500">Erro (0 pontos):</strong> Você erra o vencedor e o placar. <br/><span className="text-slate-400 ml-4">Ex: Jogo 2x1, seu palpite 1x1 ou 0x1.</span></li>
+                <li><strong className="text-emerald-400">Diferença de Gols (2 pontos):</strong> Você erra o placar exato, mas acerta o vencedor e a diferença de gols. <br/><span className="text-slate-400 ml-4">Ex: Jogo 3x1 (diff +2), seu palpite 2x0 (diff +2).</span></li>
+                <li><strong className="text-emerald-400">Acerto Simples do Vencedor (1 ponto):</strong> Você acerta apenas o time vencedor, errando a diferença de gols. <br/><span className="text-slate-400 ml-4">Ex: Jogo 2x1, seu palpite 1x0.</span></li>
+                <li><strong className="text-slate-500">Empate Incorreto ou Erro (0 pontos):</strong> Você erra o vencedor. No caso de empate, só pontua 3 pontos se for exato (se errar o número de gols do empate ganha 0).</li>
               </ul>
               <div className="pt-4 mt-2 border-t border-white/10 text-xs text-slate-400 leading-relaxed">
                 <p>O <strong>Placar Real</strong> de cada partida pode ser preenchido por qualquer pessoa diretamente no card do jogo assim que ele acabar. Seja honesto e divirta-se! 🤝</p>
@@ -584,6 +670,15 @@ function App() {
           <div className="w-10 h-10 border-4 border-emerald-400/10 border-l-emerald-400 rounded-full animate-spin"></div>
           <p className="text-sm">Sincronizando com a Arena Supabase...</p>
         </div>
+      ) : currentView === 'champion' ? (
+        <CampeaoView 
+          participantes={participantes}
+          bolaoConfig={bolaoConfig}
+          allTeams={allTeams}
+          avatars={avatars}
+          supabase={supabase}
+          refreshData={fetchData}
+        />
       ) : (
         <main className="grid grid-cols-1 lg:grid-cols-[330px_1fr] gap-8 items-start">
           
@@ -1161,3 +1256,243 @@ function App() {
 }
 
 export default App;
+
+function CampeaoView({ participantes, bolaoConfig, allTeams, avatars, supabase, refreshData }) {
+  const [editingCard, setEditingCard] = useState(null);
+  const [draft, setDraft] = useState({ campeao: '', f1: '', f2: '' });
+  
+  const [adminReal, setAdminReal] = useState({ campeao: '', f1: '', f2: '' });
+
+  useEffect(() => {
+    if (bolaoConfig) {
+      setAdminReal({
+        campeao: bolaoConfig.campeao_real || '',
+        f1: bolaoConfig.finalista_1_real || '',
+        f2: bolaoConfig.finalista_2_real || ''
+      });
+    }
+  }, [bolaoConfig]);
+
+  const handleEditClick = (p) => {
+    setEditingCard(p.id);
+    setDraft({
+      campeao: p.palpite_campeao || '',
+      f1: p.palpite_finalista_1 || '',
+      f2: p.palpite_finalista_2 || ''
+    });
+  };
+
+  const handleSavePalpite = async (pId) => {
+    try {
+      const { error } = await supabase
+        .from('participantes')
+        .update({
+          palpite_campeao: draft.campeao,
+          palpite_finalista_1: draft.f1,
+          palpite_finalista_2: draft.f2
+        })
+        .eq('id', pId);
+      
+      if (error) throw error;
+      setEditingCard(null);
+      refreshData();
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao salvar palpites de finais.');
+    }
+  };
+
+  const handleSaveRealResults = async () => {
+    try {
+      const { error } = await supabase
+        .from('configs_bolao')
+        .upsert({
+          id: 1,
+          campeao_real: adminReal.campeao,
+          finalista_1_real: adminReal.f1,
+          finalista_2_real: adminReal.f2
+        });
+      if (error) throw error;
+      refreshData();
+      alert('Resultados Reais Salvos!');
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao salvar resultados reais.');
+    }
+  };
+
+  const handleToggleLock = async () => {
+    const isLocked = bolaoConfig?.apostas_travadas || false;
+    try {
+      const { error } = await supabase
+        .from('configs_bolao')
+        .upsert({
+          id: 1,
+          apostas_travadas: !isLocked
+        });
+      if (error) throw error;
+      refreshData();
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao travar/destravar.');
+    }
+  };
+
+  const isLocked = bolaoConfig?.apostas_travadas || false;
+
+  return (
+    <main className="max-w-4xl mx-auto flex flex-col gap-8 animate-in fade-in duration-500">
+      
+      <div className="bg-amber-900/20 border border-amber-500/20 rounded-3xl p-6 text-center shadow-[0_0_30px_rgba(245,158,11,0.05)]">
+        <h2 className="text-2xl md:text-3xl font-title font-bold text-amber-500 flex justify-center items-center gap-3">
+          <Swords /> Saguão dos Desafiantes <Swords />
+        </h2>
+        <p className="text-amber-200/60 mt-3 max-w-2xl mx-auto text-sm">
+          Adivinhe quem chegará na Grande Final! <strong>+3 pontos</strong> por cada finalista correto, e um grande prêmio de <strong>+10 pontos</strong> se acertar o Campeão!
+        </p>
+        {isLocked && (
+          <div className="mt-4 inline-flex items-center gap-2 bg-red-500/20 text-red-400 px-4 py-1.5 rounded-full text-xs font-bold border border-red-500/30">
+            <Lock size={14} /> Apostas Encerradas
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+        {participantes.map(p => {
+          const isEditing = editingCard === p.id;
+          return (
+            <div key={p.id} className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5 relative overflow-hidden group hover:border-white/10 transition-colors shadow-lg flex flex-col h-full">
+              <div className="flex items-center gap-3 mb-4 border-b border-white/5 pb-4 shrink-0">
+                <img src={avatars[p.nome]} alt={p.nome} className="w-12 h-12 rounded-full border-2 border-zinc-700 object-cover" />
+                <span className="font-title text-lg font-bold text-slate-100">{p.nome}</span>
+              </div>
+
+              <div className="flex flex-col gap-3 flex-1">
+                {/* Campeao */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold uppercase text-amber-500/80">Campeão do Mundo (10 pts)</span>
+                  {isEditing ? (
+                    <select className="bg-black/50 border border-amber-500/30 rounded-lg p-2 text-sm text-amber-200 outline-none" value={draft.campeao} onChange={e => setDraft({...draft, campeao: e.target.value})}>
+                      <option value="">Selecione...</option>
+                      {allTeams.map(t => <option key={`c-${t.name}`} value={t.name}>{t.name}</option>)}
+                    </select>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-black/30 p-2 rounded-lg border border-white/5 min-h-[40px]">
+                      {p.palpite_campeao && allTeams.find(t => t.name === p.palpite_campeao) && (
+                        <img src={`https://flagcdn.com/w40/${allTeams.find(t => t.name === p.palpite_campeao).flag}.png`} className="w-6 h-4 rounded shadow-sm" alt="flag"/>
+                      )}
+                      <span className="text-sm font-semibold text-amber-400">{p.palpite_campeao || '-'}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Finalista 1 */}
+                <div className="flex flex-col gap-1 mt-2">
+                  <span className="text-[10px] font-bold uppercase text-slate-400">Finalista 1 (3 pts)</span>
+                  {isEditing ? (
+                    <select className="bg-black/50 border border-white/10 rounded-lg p-2 text-sm text-slate-200 outline-none" value={draft.f1} onChange={e => setDraft({...draft, f1: e.target.value})}>
+                      <option value="">Selecione...</option>
+                      {allTeams.map(t => <option key={`f1-${t.name}`} value={t.name}>{t.name}</option>)}
+                    </select>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-black/30 p-2 rounded-lg border border-white/5 min-h-[40px]">
+                      {p.palpite_finalista_1 && allTeams.find(t => t.name === p.palpite_finalista_1) && (
+                        <img src={`https://flagcdn.com/w40/${allTeams.find(t => t.name === p.palpite_finalista_1).flag}.png`} className="w-6 h-4 rounded shadow-sm" alt="flag"/>
+                      )}
+                      <span className="text-sm font-medium text-slate-300">{p.palpite_finalista_1 || '-'}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Finalista 2 */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold uppercase text-slate-400">Finalista 2 (3 pts)</span>
+                  {isEditing ? (
+                    <select className="bg-black/50 border border-white/10 rounded-lg p-2 text-sm text-slate-200 outline-none" value={draft.f2} onChange={e => setDraft({...draft, f2: e.target.value})}>
+                      <option value="">Selecione...</option>
+                      {allTeams.map(t => <option key={`f2-${t.name}`} value={t.name}>{t.name}</option>)}
+                    </select>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-black/30 p-2 rounded-lg border border-white/5 min-h-[40px]">
+                      {p.palpite_finalista_2 && allTeams.find(t => t.name === p.palpite_finalista_2) && (
+                        <img src={`https://flagcdn.com/w40/${allTeams.find(t => t.name === p.palpite_finalista_2).flag}.png`} className="w-6 h-4 rounded shadow-sm" alt="flag"/>
+                      )}
+                      <span className="text-sm font-medium text-slate-300">{p.palpite_finalista_2 || '-'}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Ações coladas no final (mt-auto via flex-col se esticar) */}
+              <div className="mt-4 shrink-0">
+                {!isLocked && (
+                  <div className="flex justify-end">
+                    {isEditing ? (
+                      <div className="flex gap-2">
+                        <button onClick={() => setEditingCard(null)} className="p-2 bg-zinc-800 rounded-lg text-zinc-400 hover:text-white"><X size={16}/></button>
+                        <button onClick={() => handleSavePalpite(p.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-lg border border-emerald-500/30 hover:bg-emerald-500/30"><Check size={14}/> Salvar</button>
+                      </div>
+                    ) : (
+                      <button onClick={() => handleEditClick(p)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-xs font-bold text-slate-300 hover:bg-white/10 transition-colors">
+                        <Edit2 size={12}/> Editar
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ADMIN PANEL */}
+      <div className="mt-12 border-t border-red-500/20 pt-8">
+        <h3 className="text-red-400 font-bold font-title mb-4 flex items-center gap-2"><Settings size={18}/> Painel do Mestre (Admin Finais)</h3>
+        
+        <div className="bg-black/40 border border-red-500/10 rounded-2xl p-6">
+          <div className="flex items-center justify-between border-b border-white/5 pb-5 mb-5">
+            <div>
+              <h4 className="text-slate-200 font-bold text-sm">Travar Apostas dos Finais</h4>
+              <p className="text-slate-500 text-xs mt-1 max-w-md">Ao ativar, ninguém mais poderá editar seus campeões e finalistas.</p>
+            </div>
+            <button 
+              onClick={handleToggleLock}
+              className={`flex items-center shrink-0 gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${isLocked ? 'bg-zinc-800 text-zinc-400 border border-zinc-700' : 'bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30'}`}
+            >
+              {isLocked ? <><Unlock size={14}/> Destravar</> : <><Lock size={14}/> Travar Apostas</>}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-bold text-amber-500">Campeão Real</span>
+              <select className="bg-zinc-900 border border-white/10 rounded-xl p-2.5 text-sm text-slate-200 outline-none" value={adminReal.campeao} onChange={e => setAdminReal({...adminReal, campeao: e.target.value})}>
+                <option value="">Selecione...</option>
+                {allTeams.map(t => <option key={`ar-c-${t.name}`} value={t.name}>{t.name}</option>)}
+              </select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-bold text-slate-400">Finalista 1 Real</span>
+              <select className="bg-zinc-900 border border-white/10 rounded-xl p-2.5 text-sm text-slate-200 outline-none" value={adminReal.f1} onChange={e => setAdminReal({...adminReal, f1: e.target.value})}>
+                <option value="">Selecione...</option>
+                {allTeams.map(t => <option key={`ar-f1-${t.name}`} value={t.name}>{t.name}</option>)}
+              </select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-bold text-slate-400">Finalista 2 Real</span>
+              <select className="bg-zinc-900 border border-white/10 rounded-xl p-2.5 text-sm text-slate-200 outline-none" value={adminReal.f2} onChange={e => setAdminReal({...adminReal, f2: e.target.value})}>
+                <option value="">Selecione...</option>
+                {allTeams.map(t => <option key={`ar-f2-${t.name}`} value={t.name}>{t.name}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="mt-6 flex justify-end">
+            <button onClick={handleSaveRealResults} className="bg-emerald-500 text-black px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-emerald-400 transition-all hover:scale-105">
+              Salvar Resultados Reais e Pontuar
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
