@@ -379,8 +379,8 @@
   },
   {
     "grupo": "J",
-    "rodada": "Rodada 2",
-    "data_hora": "2026-06-22T14:00:00Z",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-26T17:00:00Z",
     "time_a": "Argentina",
     "time_b": "Jordânia",
     "flag_a": "ar",
@@ -388,8 +388,8 @@
   },
   {
     "grupo": "J",
-    "rodada": "Rodada 2",
-    "data_hora": "2026-06-22T20:00:00Z",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-26T17:00:00Z",
     "time_a": "Argélia",
     "time_b": "Áustria",
     "flag_a": "dz",
@@ -595,8 +595,8 @@
   },
   {
     "grupo": "J",
-    "rodada": "Rodada 3",
-    "data_hora": "2026-06-26T17:00:00Z",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-22T14:00:00Z",
     "time_a": "Áustria",
     "time_b": "Argentina",
     "flag_a": "at",
@@ -604,8 +604,8 @@
   },
   {
     "grupo": "J",
-    "rodada": "Rodada 3",
-    "data_hora": "2026-06-26T17:00:00Z",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-22T20:00:00Z",
     "time_a": "Jordânia",
     "time_b": "Argélia",
     "flag_a": "jo",
