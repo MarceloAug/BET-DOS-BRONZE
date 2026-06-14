@@ -181,8 +181,8 @@
   },
   {
     "grupo": "K",
-    "rodada": "Rodada 2",
-    "data_hora": "2026-06-17T14:00:00Z",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-23T14:00:00Z",
     "time_a": "Colômbia",
     "time_b": "Portugal",
     "flag_a": "co",
@@ -190,8 +190,8 @@
   },
   {
     "grupo": "K",
-    "rodada": "Rodada 2",
-    "data_hora": "2026-06-17T23:00:00Z",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-23T14:00:00Z",
     "time_a": "Uzbequistão",
     "time_b": "RD Congo",
     "flag_a": "uz",
@@ -613,8 +613,8 @@
   },
   {
     "grupo": "K",
-    "rodada": "Rodada 3",
-    "data_hora": "2026-06-23T14:00:00Z",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-17T14:00:00Z",
     "time_a": "RD Congo",
     "time_b": "Colômbia",
     "flag_a": "cd",
@@ -622,8 +622,8 @@
   },
   {
     "grupo": "K",
-    "rodada": "Rodada 3",
-    "data_hora": "2026-06-23T14:00:00Z",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-17T23:00:00Z",
     "time_a": "Uzbequistão",
     "time_b": "Portugal",
     "flag_a": "uz",
