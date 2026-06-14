@@ -853,8 +853,8 @@ function App() {
                       <div className="flex flex-row items-center justify-between gap-2 md:gap-4 mb-6">
                         
                         {/* Time A */}
-                        <div className="flex items-center justify-end gap-2 md:gap-3 flex-1 text-right">
-                          <span className="hidden md:inline-block font-title text-base font-bold text-slate-100 truncate max-w-[120px] lg:max-w-none">{jogo.time_a}</span>
+                        <div className="flex flex-col-reverse md:flex-row items-center justify-end gap-1 md:gap-3 flex-1 text-right">
+                          <span className="font-title text-[9px] md:text-base font-bold text-slate-300 md:text-slate-100 truncate max-w-[70px] md:max-w-[120px] lg:max-w-none text-center md:text-right leading-none">{jogo.time_a}</span>
                           <img 
                             src={`https://flagcdn.com/w40/${realFlagA}.png`} 
                             alt={jogo.time_a} 
@@ -945,14 +945,14 @@ function App() {
                         </div>
 
                         {/* Time B */}
-                        <div className="flex items-center justify-start gap-2 md:gap-3 flex-1 text-left">
+                        <div className="flex flex-col md:flex-row items-center justify-start gap-1 md:gap-3 flex-1 text-left">
                           <img 
                             src={`https://flagcdn.com/w40/${jogo.flag_b}.png`} 
                             alt={jogo.time_b} 
                             className="w-8 h-6 md:w-9 md:h-6 rounded object-cover shadow border border-white/10 shrink-0"
                             onError={(e) => { e.target.src = 'https://flagcdn.com/w40/un.png' }}
                           />
-                          <span className="hidden md:inline-block font-title text-base font-bold text-slate-100 truncate max-w-[120px] lg:max-w-none">{jogo.time_b}</span>
+                          <span className="font-title text-[9px] md:text-base font-bold text-slate-300 md:text-slate-100 truncate max-w-[70px] md:max-w-[120px] lg:max-w-none text-center md:text-left leading-none">{jogo.time_b}</span>
                         </div>
                       </div>
 
@@ -974,13 +974,19 @@ function App() {
 
                             let ptsBadge = null;
                             if (isFinished && palpite && palpite.gols_a !== null && palpite.gols_b !== null) {
-                              const realWinner = Math.sign(jogo.gols_a - jogo.gols_b);
-                              const predWinner = Math.sign(palpite.gols_a - palpite.gols_b);
+                              const realDiff = jogo.gols_a - jogo.gols_b;
+                              const predDiff = palpite.gols_a - palpite.gols_b;
+                              const realWinner = Math.sign(realDiff);
+                              const predWinner = Math.sign(predDiff);
                               
                               if (jogo.gols_a === palpite.gols_a && jogo.gols_b === palpite.gols_b) {
                                 ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">+3</span>;
-                              } else if (realWinner === predWinner) {
-                                ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-400/10 text-emerald-300 border border-emerald-400/20">+1</span>;
+                              } else if (realWinner === predWinner && realWinner !== 0) {
+                                if (realDiff === predDiff) {
+                                  ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-lime-500/10 text-lime-400 border border-lime-500/20">+2</span>;
+                                } else {
+                                  ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-400/10 text-emerald-300 border border-emerald-400/20">+1</span>;
+                                }
                               } else {
                                 ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-white/5 text-slate-500">0</span>;
                               }
