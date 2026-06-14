@@ -1,77 +1,650 @@
 [
-  { "grupo": "A", "rodada": "Rodada 1", "data_hora": "2026-06-11T17:00:00Z", "time_a": "México", "time_b": "África do Sul", "flag_a": "mx", "flag_b": "za" },
-  { "grupo": "A", "rodada": "Rodada 1", "data_hora": "2026-06-11T20:00:00Z", "time_a": "Coreia do Sul", "time_b": "Tchéquia", "flag_a": "kr", "flag_b": "cz" },
-  { "grupo": "B", "rodada": "Rodada 1", "data_hora": "2026-06-12T14:00:00Z", "time_a": "Canadá", "time_b": "Bósnia e Herzegovina", "flag_a": "ca", "flag_b": "ba" },
-  { "grupo": "B", "rodada": "Rodada 1", "data_hora": "2026-06-13T17:00:00Z", "time_a": "Catar", "time_b": "Suíça", "flag_a": "qa", "flag_b": "ch" },
-  { "grupo": "C", "rodada": "Rodada 1", "data_hora": "2026-06-13T20:00:00Z", "time_a": "Brasil", "time_b": "Marrocos", "flag_a": "br", "flag_b": "ma" },
-  { "grupo": "C", "rodada": "Rodada 1", "data_hora": "2026-06-13T14:00:00Z", "time_a": "Haiti", "time_b": "Escócia", "flag_a": "ht", "flag_b": "gb-sct" },
-  { "grupo": "D", "rodada": "Rodada 1", "data_hora": "2026-06-12T20:00:00Z", "time_a": "Estados Unidos", "time_b": "Paraguai", "flag_a": "us", "flag_b": "py" },
-  { "grupo": "D", "rodada": "Rodada 1", "data_hora": "2026-06-13T23:00:00Z", "time_a": "Austrália", "time_b": "Turquia", "flag_a": "au", "flag_b": "tr" },
-  { "grupo": "E", "rodada": "Rodada 1", "data_hora": "2026-06-14T14:00:00Z", "time_a": "Alemanha", "time_b": "Curaçao", "flag_a": "de", "flag_b": "cw" },
-  { "grupo": "E", "rodada": "Rodada 1", "data_hora": "2026-06-14T20:00:00Z", "time_a": "Costa do Marfim", "time_b": "Equador", "flag_a": "ci", "flag_b": "ec" },
-  { "grupo": "F", "rodada": "Rodada 1", "data_hora": "2026-06-14T17:00:00Z", "time_a": "Holanda", "time_b": "Japão", "flag_a": "nl", "flag_b": "jp" },
-  { "grupo": "F", "rodada": "Rodada 1", "data_hora": "2026-06-14T23:00:00Z", "time_a": "Suécia", "time_b": "Tunísia", "flag_a": "se", "flag_b": "tn" },
-  { "grupo": "G", "rodada": "Rodada 1", "data_hora": "2026-06-15T14:00:00Z", "time_a": "Bélgica", "time_b": "Egito", "flag_a": "be", "flag_b": "eg" },
-  { "grupo": "G", "rodada": "Rodada 1", "data_hora": "2026-06-15T20:00:00Z", "time_a": "Irã", "time_b": "Nova Zelândia", "flag_a": "ir", "flag_b": "nz" },
-  { "grupo": "H", "rodada": "Rodada 1", "data_hora": "2026-06-15T17:00:00Z", "time_a": "Espanha", "time_b": "Cabo Verde", "flag_a": "es", "flag_b": "cv" },
-  { "grupo": "H", "rodada": "Rodada 1", "data_hora": "2026-06-15T23:00:00Z", "time_a": "Arábia Saudita", "time_b": "Uruguai", "flag_a": "sa", "flag_b": "uy" },
-  { "grupo": "I", "rodada": "Rodada 1", "data_hora": "2026-06-16T14:00:00Z", "time_a": "França", "time_b": "Senegal", "flag_a": "fr", "flag_b": "sn" },
-  { "grupo": "I", "rodada": "Rodada 1", "data_hora": "2026-06-16T20:00:00Z", "time_a": "Iraque", "time_b": "Noruega", "flag_a": "iq", "flag_b": "no" },
-  { "grupo": "J", "rodada": "Rodada 1", "data_hora": "2026-06-16T17:00:00Z", "time_a": "Argentina", "time_b": "Argélia", "flag_a": "ar", "flag_b": "dz" },
-  { "grupo": "J", "rodada": "Rodada 1", "data_hora": "2026-06-16T23:00:00Z", "time_a": "Jordânia", "time_b": "Áustria", "flag_a": "jo", "flag_b": "at" },
-
-  { "grupo": "K", "rodada": "Rodada 1", "data_hora": "2026-06-12T17:00:00Z", "time_a": "Colômbia", "time_b": "Portugal", "flag_a": "co", "flag_b": "pt" },
-  { "grupo": "K", "rodada": "Rodada 1", "data_hora": "2026-06-12T23:00:00Z", "time_a": "Uzbequistão", "time_b": "RD Congo", "flag_a": "uz", "flag_b": "cd" },
-  { "grupo": "L", "rodada": "Rodada 1", "data_hora": "2026-06-11T23:00:00Z", "time_a": "Inglaterra", "time_b": "Croácia", "flag_a": "gb-eng", "flag_b": "hr" },
-  { "grupo": "L", "rodada": "Rodada 1", "data_hora": "2026-06-12T02:00:00Z", "time_a": "Gana", "time_b": "Panamá", "flag_a": "gh", "flag_b": "pa" },
-
-  { "grupo": "A", "rodada": "Rodada 2", "data_hora": "2026-06-17T17:00:00Z", "time_a": "México", "time_b": "Coreia do Sul", "flag_a": "mx", "flag_b": "kr" },
-  { "grupo": "A", "rodada": "Rodada 2", "data_hora": "2026-06-17T20:00:00Z", "time_a": "África do Sul", "time_b": "Tchéquia", "flag_a": "za", "flag_b": "cz" },
-  { "grupo": "B", "rodada": "Rodada 2", "data_hora": "2026-06-18T14:00:00Z", "time_a": "Canadá", "time_b": "Catar", "flag_a": "ca", "flag_b": "qa" },
-  { "grupo": "B", "rodada": "Rodada 2", "data_hora": "2026-06-18T20:00:00Z", "time_a": "Bósnia e Herzegovina", "time_b": "Suíça", "flag_a": "ba", "flag_b": "ch" },
-  { "grupo": "C", "rodada": "Rodada 2", "data_hora": "2026-06-19T20:00:00Z", "time_a": "Brasil", "time_b": "Haiti", "flag_a": "br", "flag_b": "ht" },
-  { "grupo": "C", "rodada": "Rodada 2", "data_hora": "2026-06-19T14:00:00Z", "time_a": "Marrocos", "time_b": "Escócia", "flag_a": "ma", "flag_b": "gb-sct" },
-  { "grupo": "D", "rodada": "Rodada 2", "data_hora": "2026-06-18T17:00:00Z", "time_a": "Estados Unidos", "time_b": "Austrália", "flag_a": "us", "flag_b": "au" },
-  { "grupo": "D", "rodada": "Rodada 2", "data_hora": "2026-06-18T23:00:00Z", "time_a": "Paraguai", "time_b": "Turquia", "flag_a": "py", "flag_b": "tr" },
-  { "grupo": "E", "rodada": "Rodada 2", "data_hora": "2026-06-19T17:00:00Z", "time_a": "Alemanha", "time_b": "Costa do Marfim", "flag_a": "de", "flag_b": "ci" },
-  { "grupo": "E", "rodada": "Rodada 2", "data_hora": "2026-06-19T23:00:00Z", "time_a": "Curaçao", "time_b": "Equador", "flag_a": "cw", "flag_b": "ec" },
-  { "grupo": "F", "rodada": "Rodada 2", "data_hora": "2026-06-20T14:00:00Z", "time_a": "Holanda", "time_b": "Suécia", "flag_a": "nl", "flag_b": "se" },
-  { "grupo": "F", "rodada": "Rodada 2", "data_hora": "2026-06-20T20:00:00Z", "time_a": "Japão", "time_b": "Tunísia", "flag_a": "jp", "flag_b": "tn" },
-  { "grupo": "G", "rodada": "Rodada 2", "data_hora": "2026-06-20T17:00:00Z", "time_a": "Bélgica", "time_b": "Irã", "flag_a": "be", "flag_b": "ir" },
-  { "grupo": "G", "rodada": "Rodada 2", "data_hora": "2026-06-20T23:00:00Z", "time_a": "Egito", "time_b": "Nova Zelândia", "flag_a": "eg", "flag_b": "nz" },
-  { "grupo": "H", "rodada": "Rodada 2", "data_hora": "2026-06-21T14:00:00Z", "time_a": "Espanha", "time_b": "Arábia Saudita", "flag_a": "es", "flag_b": "sa" },
-  { "grupo": "H", "rodada": "Rodada 2", "data_hora": "2026-06-21T20:00:00Z", "time_a": "Cabo Verde", "time_b": "Uruguai", "flag_a": "cv", "flag_b": "uy" },
-  { "grupo": "I", "rodada": "Rodada 2", "data_hora": "2026-06-21T17:00:00Z", "time_a": "França", "time_b": "Iraque", "flag_a": "fr", "flag_b": "iq" },
-  { "grupo": "I", "rodada": "Rodada 2", "data_hora": "2026-06-21T23:00:00Z", "time_a": "Senegal", "time_b": "Noruega", "flag_a": "sn", "flag_b": "no" },
-  { "grupo": "J", "rodada": "Rodada 2", "data_hora": "2026-06-22T14:00:00Z", "time_a": "Argentina", "time_b": "Jordânia", "flag_a": "ar", "flag_b": "jo" },
-  { "grupo": "J", "rodada": "Rodada 2", "data_hora": "2026-06-22T20:00:00Z", "time_a": "Argélia", "time_b": "Áustria", "flag_a": "dz", "flag_b": "at" },
-  { "grupo": "K", "rodada": "Rodada 2", "data_hora": "2026-06-17T14:00:00Z", "time_a": "Colômbia", "time_b": "Uzbequistão", "flag_a": "co", "flag_b": "uz" },
-  { "grupo": "K", "rodada": "Rodada 2", "data_hora": "2026-06-17T23:00:00Z", "time_a": "Portugal", "time_b": "RD Congo", "flag_a": "pt", "flag_b": "cd" },
-  { "grupo": "L", "rodada": "Rodada 2", "data_hora": "2026-06-22T17:00:00Z", "time_a": "Inglaterra", "time_b": "Gana", "flag_a": "gb-eng", "flag_b": "gh" },
-  { "grupo": "L", "rodada": "Rodada 2", "data_hora": "2026-06-22T23:00:00Z", "time_a": "Croácia", "time_b": "Panamá", "flag_a": "hr", "flag_b": "pa" },
-
-  { "grupo": "A", "rodada": "Rodada 3", "data_hora": "2026-06-23T20:00:00Z", "time_a": "Tchéquia", "time_b": "México", "flag_a": "cz", "flag_b": "mx" },
-  { "grupo": "A", "rodada": "Rodada 3", "data_hora": "2026-06-23T20:00:00Z", "time_a": "África do Sul", "time_b": "Coreia do Sul", "flag_a": "za", "flag_b": "kr" },
-  { "grupo": "B", "rodada": "Rodada 3", "data_hora": "2026-06-24T14:00:00Z", "time_a": "Suíça", "time_b": "Canadá", "flag_a": "ch", "flag_b": "ca" },
-  { "grupo": "B", "rodada": "Rodada 3", "data_hora": "2026-06-24T14:00:00Z", "time_a": "Bósnia e Herzegovina", "time_b": "Catar", "flag_a": "ba", "flag_b": "qa" },
-  { "grupo": "C", "rodada": "Rodada 3", "data_hora": "2026-06-24T20:00:00Z", "time_a": "Escócia", "time_b": "Brasil", "flag_a": "gb-sct", "flag_b": "br" },
-  { "grupo": "C", "rodada": "Rodada 3", "data_hora": "2026-06-24T20:00:00Z", "time_a": "Marrocos", "time_b": "Haiti", "flag_a": "ma", "flag_b": "ht" },
-  { "grupo": "D", "rodada": "Rodada 3", "data_hora": "2026-06-24T17:00:00Z", "time_a": "Turquia", "time_b": "Estados Unidos", "flag_a": "tr", "flag_b": "us" },
-  { "grupo": "D", "rodada": "Rodada 3", "data_hora": "2026-06-24T17:00:00Z", "time_a": "Paraguai", "time_b": "Austrália", "flag_a": "py", "flag_b": "au" },
-  { "grupo": "E", "rodada": "Rodada 3", "data_hora": "2026-06-25T20:00:00Z", "time_a": "Equador", "time_b": "Alemanha", "flag_a": "ec", "flag_b": "de" },
-  { "grupo": "E", "rodada": "Rodada 3", "data_hora": "2026-06-25T20:00:00Z", "time_a": "Curaçao", "time_b": "Costa do Marfim", "flag_a": "cw", "flag_b": "ci" },
-  { "grupo": "F", "rodada": "Rodada 3", "data_hora": "2026-06-25T14:00:00Z", "time_a": "Tunísia", "time_b": "Holanda", "flag_a": "tn", "flag_b": "nl" },
-  { "grupo": "F", "rodada": "Rodada 3", "data_hora": "2026-06-25T14:00:00Z", "time_a": "Suécia", "time_b": "Japão", "flag_a": "se", "flag_b": "jp" },
-  { "grupo": "G", "rodada": "Rodada 3", "data_hora": "2026-06-25T17:00:00Z", "time_a": "Nova Zelândia", "time_b": "Bélgica", "flag_a": "nz", "flag_b": "be" },
-  { "grupo": "G", "rodada": "Rodada 3", "data_hora": "2026-06-25T17:00:00Z", "time_a": "Egito", "time_b": "Irã", "flag_a": "eg", "flag_b": "ir" },
-  { "grupo": "H", "rodada": "Rodada 3", "data_hora": "2026-06-26T14:00:00Z", "time_a": "Uruguai", "time_b": "Espanha", "flag_a": "uy", "flag_b": "es" },
-  { "grupo": "H", "rodada": "Rodada 3", "data_hora": "2026-06-26T14:00:00Z", "time_a": "Cabo Verde", "time_b": "Arábia Saudita", "flag_a": "cv", "flag_b": "sa" },
-  { "grupo": "I", "rodada": "Rodada 3", "data_hora": "2026-06-26T20:00:00Z", "time_a": "Noruega", "time_b": "França", "flag_a": "no", "flag_b": "fr" },
-  { "grupo": "I", "rodada": "Rodada 3", "data_hora": "2026-06-26T20:00:00Z", "time_a": "Iraque", "time_b": "Senegal", "flag_a": "iq", "flag_b": "sn" },
-  { "grupo": "J", "rodada": "Rodada 3", "data_hora": "2026-06-26T17:00:00Z", "time_a": "Áustria", "time_b": "Argentina", "flag_a": "at", "flag_b": "ar" },
-  { "grupo": "J", "rodada": "Rodada 3", "data_hora": "2026-06-26T17:00:00Z", "time_a": "Jordânia", "time_b": "Argélia", "flag_a": "jo", "flag_b": "dz" },
-  { "grupo": "K", "rodada": "Rodada 3", "data_hora": "2026-06-23T14:00:00Z", "time_a": "RD Congo", "time_b": "Colômbia", "flag_a": "cd", "flag_b": "co" },
-  { "grupo": "K", "rodada": "Rodada 3", "data_hora": "2026-06-23T14:00:00Z", "time_a": "Uzbequistão", "time_b": "Portugal", "flag_a": "uz", "flag_b": "pt" },
-  { "grupo": "L", "rodada": "Rodada 3", "data_hora": "2026-06-27T20:00:00Z", "time_a": "Panamá", "time_b": "Inglaterra", "flag_a": "pa", "flag_b": "gb-eng" },
-  { "grupo": "L", "rodada": "Rodada 3", "data_hora": "2026-06-27T20:00:00Z", "time_a": "Gana", "time_b": "Croácia", "flag_a": "gh", "flag_b": "hr" }
+  {
+    "grupo": "A",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-11T17:00:00Z",
+    "time_a": "México",
+    "time_b": "África do Sul",
+    "flag_a": "mx",
+    "flag_b": "za"
+  },
+  {
+    "grupo": "A",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-11T20:00:00Z",
+    "time_a": "Coreia do Sul",
+    "time_b": "Tchéquia",
+    "flag_a": "kr",
+    "flag_b": "cz"
+  },
+  {
+    "grupo": "B",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-12T14:00:00Z",
+    "time_a": "Canadá",
+    "time_b": "Bósnia e Herzegovina",
+    "flag_a": "ca",
+    "flag_b": "ba"
+  },
+  {
+    "grupo": "B",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-13T17:00:00Z",
+    "time_a": "Catar",
+    "time_b": "Suíça",
+    "flag_a": "qa",
+    "flag_b": "ch"
+  },
+  {
+    "grupo": "C",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-13T20:00:00Z",
+    "time_a": "Brasil",
+    "time_b": "Marrocos",
+    "flag_a": "br",
+    "flag_b": "ma"
+  },
+  {
+    "grupo": "C",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-13T14:00:00Z",
+    "time_a": "Haiti",
+    "time_b": "Escócia",
+    "flag_a": "ht",
+    "flag_b": "gb-sct"
+  },
+  {
+    "grupo": "D",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-12T20:00:00Z",
+    "time_a": "Estados Unidos",
+    "time_b": "Paraguai",
+    "flag_a": "us",
+    "flag_b": "py"
+  },
+  {
+    "grupo": "D",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-13T23:00:00Z",
+    "time_a": "Austrália",
+    "time_b": "Turquia",
+    "flag_a": "au",
+    "flag_b": "tr"
+  },
+  {
+    "grupo": "E",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-14T14:00:00Z",
+    "time_a": "Alemanha",
+    "time_b": "Curaçao",
+    "flag_a": "de",
+    "flag_b": "cw"
+  },
+  {
+    "grupo": "E",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-14T20:00:00Z",
+    "time_a": "Costa do Marfim",
+    "time_b": "Equador",
+    "flag_a": "ci",
+    "flag_b": "ec"
+  },
+  {
+    "grupo": "F",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-14T17:00:00Z",
+    "time_a": "Holanda",
+    "time_b": "Japão",
+    "flag_a": "nl",
+    "flag_b": "jp"
+  },
+  {
+    "grupo": "F",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-14T23:00:00Z",
+    "time_a": "Suécia",
+    "time_b": "Tunísia",
+    "flag_a": "se",
+    "flag_b": "tn"
+  },
+  {
+    "grupo": "G",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-15T14:00:00Z",
+    "time_a": "Bélgica",
+    "time_b": "Egito",
+    "flag_a": "be",
+    "flag_b": "eg"
+  },
+  {
+    "grupo": "G",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-15T20:00:00Z",
+    "time_a": "Irã",
+    "time_b": "Nova Zelândia",
+    "flag_a": "ir",
+    "flag_b": "nz"
+  },
+  {
+    "grupo": "H",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-15T17:00:00Z",
+    "time_a": "Espanha",
+    "time_b": "Cabo Verde",
+    "flag_a": "es",
+    "flag_b": "cv"
+  },
+  {
+    "grupo": "H",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-15T23:00:00Z",
+    "time_a": "Arábia Saudita",
+    "time_b": "Uruguai",
+    "flag_a": "sa",
+    "flag_b": "uy"
+  },
+  {
+    "grupo": "I",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-16T14:00:00Z",
+    "time_a": "França",
+    "time_b": "Senegal",
+    "flag_a": "fr",
+    "flag_b": "sn"
+  },
+  {
+    "grupo": "I",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-16T20:00:00Z",
+    "time_a": "Iraque",
+    "time_b": "Noruega",
+    "flag_a": "iq",
+    "flag_b": "no"
+  },
+  {
+    "grupo": "J",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-16T17:00:00Z",
+    "time_a": "Argentina",
+    "time_b": "Argélia",
+    "flag_a": "ar",
+    "flag_b": "dz"
+  },
+  {
+    "grupo": "J",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-16T23:00:00Z",
+    "time_a": "Jordânia",
+    "time_b": "Áustria",
+    "flag_a": "jo",
+    "flag_b": "at"
+  },
+  {
+    "grupo": "K",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-17T14:00:00Z",
+    "time_a": "Colômbia",
+    "time_b": "Portugal",
+    "flag_a": "co",
+    "flag_b": "pt"
+  },
+  {
+    "grupo": "K",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-17T23:00:00Z",
+    "time_a": "Uzbequistão",
+    "time_b": "RD Congo",
+    "flag_a": "uz",
+    "flag_b": "cd"
+  },
+  {
+    "grupo": "L",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-11T23:00:00Z",
+    "time_a": "Inglaterra",
+    "time_b": "Croácia",
+    "flag_a": "gb-eng",
+    "flag_b": "hr"
+  },
+  {
+    "grupo": "L",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-12T02:00:00Z",
+    "time_a": "Gana",
+    "time_b": "Panamá",
+    "flag_a": "gh",
+    "flag_b": "pa"
+  },
+  {
+    "grupo": "A",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-17T17:00:00Z",
+    "time_a": "México",
+    "time_b": "Coreia do Sul",
+    "flag_a": "mx",
+    "flag_b": "kr"
+  },
+  {
+    "grupo": "A",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-17T20:00:00Z",
+    "time_a": "África do Sul",
+    "time_b": "Tchéquia",
+    "flag_a": "za",
+    "flag_b": "cz"
+  },
+  {
+    "grupo": "B",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-18T14:00:00Z",
+    "time_a": "Canadá",
+    "time_b": "Catar",
+    "flag_a": "ca",
+    "flag_b": "qa"
+  },
+  {
+    "grupo": "B",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-18T20:00:00Z",
+    "time_a": "Bósnia e Herzegovina",
+    "time_b": "Suíça",
+    "flag_a": "ba",
+    "flag_b": "ch"
+  },
+  {
+    "grupo": "C",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-19T20:00:00Z",
+    "time_a": "Brasil",
+    "time_b": "Haiti",
+    "flag_a": "br",
+    "flag_b": "ht"
+  },
+  {
+    "grupo": "C",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-19T14:00:00Z",
+    "time_a": "Marrocos",
+    "time_b": "Escócia",
+    "flag_a": "ma",
+    "flag_b": "gb-sct"
+  },
+  {
+    "grupo": "D",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-18T17:00:00Z",
+    "time_a": "Estados Unidos",
+    "time_b": "Austrália",
+    "flag_a": "us",
+    "flag_b": "au"
+  },
+  {
+    "grupo": "D",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-18T23:00:00Z",
+    "time_a": "Paraguai",
+    "time_b": "Turquia",
+    "flag_a": "py",
+    "flag_b": "tr"
+  },
+  {
+    "grupo": "E",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-19T17:00:00Z",
+    "time_a": "Alemanha",
+    "time_b": "Costa do Marfim",
+    "flag_a": "de",
+    "flag_b": "ci"
+  },
+  {
+    "grupo": "E",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-19T23:00:00Z",
+    "time_a": "Curaçao",
+    "time_b": "Equador",
+    "flag_a": "cw",
+    "flag_b": "ec"
+  },
+  {
+    "grupo": "F",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-20T14:00:00Z",
+    "time_a": "Holanda",
+    "time_b": "Suécia",
+    "flag_a": "nl",
+    "flag_b": "se"
+  },
+  {
+    "grupo": "F",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-20T20:00:00Z",
+    "time_a": "Japão",
+    "time_b": "Tunísia",
+    "flag_a": "jp",
+    "flag_b": "tn"
+  },
+  {
+    "grupo": "G",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-20T17:00:00Z",
+    "time_a": "Bélgica",
+    "time_b": "Irã",
+    "flag_a": "be",
+    "flag_b": "ir"
+  },
+  {
+    "grupo": "G",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-20T23:00:00Z",
+    "time_a": "Egito",
+    "time_b": "Nova Zelândia",
+    "flag_a": "eg",
+    "flag_b": "nz"
+  },
+  {
+    "grupo": "H",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-21T14:00:00Z",
+    "time_a": "Espanha",
+    "time_b": "Arábia Saudita",
+    "flag_a": "es",
+    "flag_b": "sa"
+  },
+  {
+    "grupo": "H",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-21T20:00:00Z",
+    "time_a": "Cabo Verde",
+    "time_b": "Uruguai",
+    "flag_a": "cv",
+    "flag_b": "uy"
+  },
+  {
+    "grupo": "I",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-21T17:00:00Z",
+    "time_a": "França",
+    "time_b": "Iraque",
+    "flag_a": "fr",
+    "flag_b": "iq"
+  },
+  {
+    "grupo": "I",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-21T23:00:00Z",
+    "time_a": "Senegal",
+    "time_b": "Noruega",
+    "flag_a": "sn",
+    "flag_b": "no"
+  },
+  {
+    "grupo": "J",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-22T14:00:00Z",
+    "time_a": "Argentina",
+    "time_b": "Jordânia",
+    "flag_a": "ar",
+    "flag_b": "jo"
+  },
+  {
+    "grupo": "J",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-22T20:00:00Z",
+    "time_a": "Argélia",
+    "time_b": "Áustria",
+    "flag_a": "dz",
+    "flag_b": "at"
+  },
+  {
+    "grupo": "K",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-12T23:00:00Z",
+    "time_a": "Colômbia",
+    "time_b": "Uzbequistão",
+    "flag_a": "co",
+    "flag_b": "uz"
+  },
+  {
+    "grupo": "K",
+    "rodada": "Rodada 1",
+    "data_hora": "2026-06-12T17:00:00Z",
+    "time_a": "Portugal",
+    "time_b": "RD Congo",
+    "flag_a": "pt",
+    "flag_b": "cd"
+  },
+  {
+    "grupo": "L",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-22T17:00:00Z",
+    "time_a": "Inglaterra",
+    "time_b": "Gana",
+    "flag_a": "gb-eng",
+    "flag_b": "gh"
+  },
+  {
+    "grupo": "L",
+    "rodada": "Rodada 2",
+    "data_hora": "2026-06-22T23:00:00Z",
+    "time_a": "Croácia",
+    "time_b": "Panamá",
+    "flag_a": "hr",
+    "flag_b": "pa"
+  },
+  {
+    "grupo": "A",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-23T20:00:00Z",
+    "time_a": "Tchéquia",
+    "time_b": "México",
+    "flag_a": "cz",
+    "flag_b": "mx"
+  },
+  {
+    "grupo": "A",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-23T20:00:00Z",
+    "time_a": "África do Sul",
+    "time_b": "Coreia do Sul",
+    "flag_a": "za",
+    "flag_b": "kr"
+  },
+  {
+    "grupo": "B",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-24T14:00:00Z",
+    "time_a": "Suíça",
+    "time_b": "Canadá",
+    "flag_a": "ch",
+    "flag_b": "ca"
+  },
+  {
+    "grupo": "B",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-24T14:00:00Z",
+    "time_a": "Bósnia e Herzegovina",
+    "time_b": "Catar",
+    "flag_a": "ba",
+    "flag_b": "qa"
+  },
+  {
+    "grupo": "C",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-24T20:00:00Z",
+    "time_a": "Escócia",
+    "time_b": "Brasil",
+    "flag_a": "gb-sct",
+    "flag_b": "br"
+  },
+  {
+    "grupo": "C",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-24T20:00:00Z",
+    "time_a": "Marrocos",
+    "time_b": "Haiti",
+    "flag_a": "ma",
+    "flag_b": "ht"
+  },
+  {
+    "grupo": "D",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-24T17:00:00Z",
+    "time_a": "Turquia",
+    "time_b": "Estados Unidos",
+    "flag_a": "tr",
+    "flag_b": "us"
+  },
+  {
+    "grupo": "D",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-24T17:00:00Z",
+    "time_a": "Paraguai",
+    "time_b": "Austrália",
+    "flag_a": "py",
+    "flag_b": "au"
+  },
+  {
+    "grupo": "E",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-25T20:00:00Z",
+    "time_a": "Equador",
+    "time_b": "Alemanha",
+    "flag_a": "ec",
+    "flag_b": "de"
+  },
+  {
+    "grupo": "E",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-25T20:00:00Z",
+    "time_a": "Curaçao",
+    "time_b": "Costa do Marfim",
+    "flag_a": "cw",
+    "flag_b": "ci"
+  },
+  {
+    "grupo": "F",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-25T14:00:00Z",
+    "time_a": "Tunísia",
+    "time_b": "Holanda",
+    "flag_a": "tn",
+    "flag_b": "nl"
+  },
+  {
+    "grupo": "F",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-25T14:00:00Z",
+    "time_a": "Suécia",
+    "time_b": "Japão",
+    "flag_a": "se",
+    "flag_b": "jp"
+  },
+  {
+    "grupo": "G",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-25T17:00:00Z",
+    "time_a": "Nova Zelândia",
+    "time_b": "Bélgica",
+    "flag_a": "nz",
+    "flag_b": "be"
+  },
+  {
+    "grupo": "G",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-25T17:00:00Z",
+    "time_a": "Egito",
+    "time_b": "Irã",
+    "flag_a": "eg",
+    "flag_b": "ir"
+  },
+  {
+    "grupo": "H",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-26T14:00:00Z",
+    "time_a": "Uruguai",
+    "time_b": "Espanha",
+    "flag_a": "uy",
+    "flag_b": "es"
+  },
+  {
+    "grupo": "H",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-26T14:00:00Z",
+    "time_a": "Cabo Verde",
+    "time_b": "Arábia Saudita",
+    "flag_a": "cv",
+    "flag_b": "sa"
+  },
+  {
+    "grupo": "I",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-26T20:00:00Z",
+    "time_a": "Noruega",
+    "time_b": "França",
+    "flag_a": "no",
+    "flag_b": "fr"
+  },
+  {
+    "grupo": "I",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-26T20:00:00Z",
+    "time_a": "Iraque",
+    "time_b": "Senegal",
+    "flag_a": "iq",
+    "flag_b": "sn"
+  },
+  {
+    "grupo": "J",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-26T17:00:00Z",
+    "time_a": "Áustria",
+    "time_b": "Argentina",
+    "flag_a": "at",
+    "flag_b": "ar"
+  },
+  {
+    "grupo": "J",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-26T17:00:00Z",
+    "time_a": "Jordânia",
+    "time_b": "Argélia",
+    "flag_a": "jo",
+    "flag_b": "dz"
+  },
+  {
+    "grupo": "K",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-23T14:00:00Z",
+    "time_a": "RD Congo",
+    "time_b": "Colômbia",
+    "flag_a": "cd",
+    "flag_b": "co"
+  },
+  {
+    "grupo": "K",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-23T14:00:00Z",
+    "time_a": "Uzbequistão",
+    "time_b": "Portugal",
+    "flag_a": "uz",
+    "flag_b": "pt"
+  },
+  {
+    "grupo": "L",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-27T20:00:00Z",
+    "time_a": "Panamá",
+    "time_b": "Inglaterra",
+    "flag_a": "pa",
+    "flag_b": "gb-eng"
+  },
+  {
+    "grupo": "L",
+    "rodada": "Rodada 3",
+    "data_hora": "2026-06-27T20:00:00Z",
+    "time_a": "Gana",
+    "time_b": "Croácia",
+    "flag_a": "gh",
+    "flag_b": "hr"
+  }
 ]
