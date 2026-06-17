@@ -1001,8 +1001,8 @@ function App() {
                               
                               if (jogo.gols_a === palpite.gols_a && jogo.gols_b === palpite.gols_b) {
                                 ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">+3</span>;
-                              } else if (realWinner === predWinner && realWinner !== 0) {
-                                if (realDiff === predDiff) {
+                              } else if (realWinner === predWinner) {
+                                if (realWinner !== 0 && realDiff === predDiff) {
                                   ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-lime-500/10 text-lime-400 border border-lime-500/20">+2</span>;
                                 } else {
                                   ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-400/10 text-emerald-300 border border-emerald-400/20">+1</span>;
