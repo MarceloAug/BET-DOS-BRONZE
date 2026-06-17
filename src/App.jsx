@@ -213,7 +213,7 @@ function App() {
       const { error } = await supabase
         .from('palpites')
         .upsert(
-          { jogo_id: jogoId, participante_id: participanteId, gols_a: parsedA, gols_b: parsedB }, 
+          { jogo_id: jogoId, participante_id: participanteId, gols_a: parsedA, gols_b: parsedB, updated_at: new Date().toISOString() }, 
           { onConflict: 'jogo_id, participante_id' }
         );
 
@@ -464,16 +464,25 @@ function App() {
           nome: p.nome || 'Visitante',
           pontos: 0,
           exatos: 0,
+          diferenca: 0,
           vencedores: 0,
-          palpitesFeitos: 0
+          palpitesFeitos: 0,
+          ultimoPalpite: null
         };
       });
 
       palpites.forEach(p => {
         const jogo = jogos.find(j => j.id === p.jogo_id);
-        if (jogo && jogo.encerrado && jogo.gols_a !== null && jogo.gols_b !== null) {
-          if (!map[p.participante_id]) return;
+        if (!map[p.participante_id]) return;
+
+        if (p.updated_at) {
+          const ptTime = new Date(p.updated_at).getTime();
+          if (!map[p.participante_id].ultimoPalpite || ptTime > map[p.participante_id].ultimoPalpite) {
+            map[p.participante_id].ultimoPalpite = ptTime;
+          }
+        }
           
+        if (jogo && jogo.encerrado && jogo.gols_a !== null && jogo.gols_b !== null) {
           map[p.participante_id].palpitesFeitos += 1;
 
           const realA = jogo.gols_a;
@@ -492,17 +501,20 @@ function App() {
             const palpiteWinner = Math.sign(palpiteDiff);
             
             if (realWinner === palpiteWinner) {
-              // Empates incorretos dão 0 pontos
               if (realWinner !== 0) {
                 // Acertou a diferença de gols? (Ex: jogo 3x1 [diff 2], palpite 2x0 [diff 2])
                 if (realDiff === palpiteDiff) {
                   map[p.participante_id].pontos += 2;
-                  map[p.participante_id].vencedores += 1;
+                  map[p.participante_id].diferenca += 1;
                 } else {
                   // Apenas acertou o vencedor
                   map[p.participante_id].pontos += 1;
                   map[p.participante_id].vencedores += 1;
                 }
+              } else {
+                // Empate, mas placar incorreto
+                map[p.participante_id].pontos += 1;
+                map[p.participante_id].vencedores += 1; // Podemos considerar como acerto simples na contagem
               }
             }
           }
@@ -648,8 +660,8 @@ function App() {
               <ul className="list-disc list-inside space-y-3 ml-1">
                 <li><strong className="text-emerald-400">Acerto Exato (3 pontos):</strong> Você acerta o placar exato da partida. <br/><span className="text-slate-400 ml-4">Ex: Jogo 2x1, seu palpite 2x1.</span></li>
                 <li><strong className="text-emerald-400">Diferença de Gols (2 pontos):</strong> Você erra o placar exato, mas acerta o vencedor e a diferença de gols. <br/><span className="text-slate-400 ml-4">Ex: Jogo 3x1 (diff +2), seu palpite 2x0 (diff +2).</span></li>
-                <li><strong className="text-emerald-400">Acerto Simples do Vencedor (1 ponto):</strong> Você acerta apenas o time vencedor, errando a diferença de gols. <br/><span className="text-slate-400 ml-4">Ex: Jogo 2x1, seu palpite 1x0.</span></li>
-                <li><strong className="text-slate-500">Empate Incorreto ou Erro (0 pontos):</strong> Você erra o vencedor. No caso de empate, só pontua 3 pontos se for exato (se errar o número de gols do empate ganha 0).</li>
+                <li><strong className="text-emerald-400">Acerto Simples do Vencedor ou Empate (1 ponto):</strong> Você acerta o time vencedor ou prevê um empate corretamente, mas erra o placar e a diferença de gols. <br/><span className="text-slate-400 ml-4">Ex: Jogo 2x1, palpite 1x0. Ou Jogo 2x2, palpite 1x1.</span></li>
+                <li><strong className="text-slate-500">Erro Total (0 pontos):</strong> Você erra o vencedor. <br/><span className="text-slate-400 ml-4">Ex: Jogo 2x1, palpite 1x2 ou 1x1.</span></li>
               </ul>
               <div className="pt-4 mt-2 border-t border-white/10 text-xs text-slate-400 leading-relaxed">
                 <p>O <strong>Placar Real</strong> de cada partida pode ser preenchido por qualquer pessoa diretamente no card do jogo assim que ele acabar. Seja honesto e divirta-se! 🤝</p>
@@ -755,8 +767,13 @@ function App() {
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/40 border border-white/10 text-slate-400">{eloName}</span>
                         </div>
                         <div className="text-[10px] text-slate-400 mt-0.5">
-                          ⚽ {user.exatos} exatos | 🏆 {user.vencedores} vencedor
+                          ⚽ {user.exatos} exatos | 🎯 {user.diferenca} dif. | 🏆 {user.vencedores} venc.
                         </div>
+                        {user.ultimoPalpite && (
+                          <div className="text-[8px] text-slate-500 mt-1 uppercase tracking-wider">
+                            Últ. atualização: {new Date(user.ultimoPalpite).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                        )}
                       </div>
                       <div className="font-title text-base font-bold text-emerald-400 flex flex-col items-end shrink-0 ml-2">
                         <span>{user.pontos}</span>
@@ -800,6 +817,9 @@ function App() {
                   return j.rodada === selectedRound && !j.encerrado && !isLocked;
                 })
                 .sort((a, b) => {
+                  if (selectedRound === 'Encerradas') {
+                    return new Date(b.data_hora) - new Date(a.data_hora);
+                  }
                   if (a.grupo && b.grupo && a.grupo !== b.grupo) {
                     return a.grupo.localeCompare(b.grupo);
                   }
