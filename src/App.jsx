@@ -1026,9 +1026,16 @@ function App() {
                                     className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-zinc-700 shrink-0 shadow-sm cursor-pointer hover:scale-110 hover:border-emerald-400 transition-all duration-300"
                                     onClick={() => setSelectedImage(avatars[friend.nome])}
                                   />
-                                  <span className="text-xs md:text-sm font-semibold truncate text-slate-300 w-full text-left md:text-center">
-                                    {friend.nome}
-                                  </span>
+                                  <div className="flex flex-col items-start md:items-center min-w-0 w-full">
+                                    <span className="text-xs md:text-sm font-semibold truncate text-slate-300 w-full text-left md:text-center">
+                                      {friend.nome}
+                                    </span>
+                                    {palpite?.updated_at && !isDrafting && (
+                                      <span className="text-[8px] text-slate-500 font-medium tracking-wide mt-0.5">
+                                        {new Date(palpite.updated_at).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
 
                                 {isFinished || isLocked ? (
