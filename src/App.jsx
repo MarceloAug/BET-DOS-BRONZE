@@ -557,9 +557,20 @@ function App() {
 
   const allTeams = React.useMemo(() => {
     const teams = {};
-    jogos.forEach(j => {
-      if (j.time_a && !teams[j.time_a]) teams[j.time_a] = j.flag_a;
-      if (j.time_b && !teams[j.time_b]) teams[j.time_b] = j.flag_b;
+    const sortedJogos = [...jogos].sort((a, b) => {
+      if (a.rodada.includes('Rodada') && !b.rodada.includes('Rodada')) return -1;
+      if (!a.rodada.includes('Rodada') && b.rodada.includes('Rodada')) return 1;
+      return 0;
+    });
+    sortedJogos.forEach(j => {
+      if (j.time_a && j.flag_a && j.flag_a !== 'un') {
+        const cleanFlag = j.flag_a.replace('_LOCKED', '').trim();
+        if (cleanFlag.length === 2 && !teams[j.time_a]) teams[j.time_a] = cleanFlag;
+      }
+      if (j.time_b && j.flag_b && j.flag_b !== 'un') {
+        const cleanFlag = j.flag_b.replace('_LOCKED', '').trim();
+        if (cleanFlag.length === 2 && !teams[j.time_b]) teams[j.time_b] = cleanFlag;
+      }
     });
     return Object.entries(teams)
       .map(([name, flag]) => ({ name, flag }))
@@ -1193,21 +1204,38 @@ function App() {
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Time da Casa (Nome)</span>
                     <input 
                       type="text" 
+                      list="teams-list-a"
                       placeholder="Ex: Brasil" 
                       value={newJogo.time_a}
-                      onChange={(e) => setNewJogo(prev => ({ ...prev, time_a: e.target.value }))}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const foundTeam = allTeams.find(t => t.name.toLowerCase() === val.toLowerCase());
+                        setNewJogo(prev => ({ 
+                          ...prev, 
+                          time_a: val, 
+                          flag_a: foundTeam ? foundTeam.flag : prev.flag_a 
+                        }));
+                      }}
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-slate-200 text-sm outline-none focus:border-emerald-400"
                     />
+                    <datalist id="teams-list-a">
+                      {allTeams.map(t => <option key={t.name} value={t.name} />)}
+                    </datalist>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Bandeira Time Casa (ex: br, ar, us)</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                      <span>Bandeira Casa (Auto)</span>
+                      {newJogo.flag_a && newJogo.flag_a.length === 2 && (
+                        <img src={`https://flagcdn.com/w20/${newJogo.flag_a}.png`} alt="flag" className="h-3 rounded" />
+                      )}
+                    </span>
                     <input 
                       type="text" 
                       placeholder="Ex: br" 
                       value={newJogo.flag_a}
                       onChange={(e) => setNewJogo(prev => ({ ...prev, flag_a: e.target.value }))}
-                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-slate-200 text-sm outline-none focus:border-emerald-400"
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-slate-200 text-sm outline-none focus:border-emerald-400 opacity-70"
                     />
                   </div>
 
@@ -1215,21 +1243,38 @@ function App() {
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Time de Fora (Nome)</span>
                     <input 
                       type="text" 
+                      list="teams-list-b"
                       placeholder="Ex: Alemanha" 
                       value={newJogo.time_b}
-                      onChange={(e) => setNewJogo(prev => ({ ...prev, time_b: e.target.value }))}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const foundTeam = allTeams.find(t => t.name.toLowerCase() === val.toLowerCase());
+                        setNewJogo(prev => ({ 
+                          ...prev, 
+                          time_b: val, 
+                          flag_b: foundTeam ? foundTeam.flag : prev.flag_b 
+                        }));
+                      }}
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-slate-200 text-sm outline-none focus:border-emerald-400"
                     />
+                    <datalist id="teams-list-b">
+                      {allTeams.map(t => <option key={t.name} value={t.name} />)}
+                    </datalist>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Bandeira Time Fora (ex: de, fr)</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                      <span>Bandeira Fora (Auto)</span>
+                      {newJogo.flag_b && newJogo.flag_b.length === 2 && (
+                        <img src={`https://flagcdn.com/w20/${newJogo.flag_b}.png`} alt="flag" className="h-3 rounded" />
+                      )}
+                    </span>
                     <input 
                       type="text" 
                       placeholder="Ex: de" 
                       value={newJogo.flag_b}
                       onChange={(e) => setNewJogo(prev => ({ ...prev, flag_b: e.target.value }))}
-                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-slate-200 text-sm outline-none focus:border-emerald-400"
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-slate-200 text-sm outline-none focus:border-emerald-400 opacity-70"
                     />
                   </div>
 
