@@ -565,11 +565,11 @@ function App() {
     sortedJogos.forEach(j => {
       if (j.time_a && j.flag_a && j.flag_a !== 'un') {
         const cleanFlag = j.flag_a.replace('_LOCKED', '').trim();
-        if (cleanFlag.length === 2 && !teams[j.time_a]) teams[j.time_a] = cleanFlag;
+        if (cleanFlag.length >= 2 && !teams[j.time_a]) teams[j.time_a] = cleanFlag;
       }
       if (j.time_b && j.flag_b && j.flag_b !== 'un') {
         const cleanFlag = j.flag_b.replace('_LOCKED', '').trim();
-        if (cleanFlag.length === 2 && !teams[j.time_b]) teams[j.time_b] = cleanFlag;
+        if (cleanFlag.length >= 2 && !teams[j.time_b]) teams[j.time_b] = cleanFlag;
       }
     });
     return Object.entries(teams)
@@ -1226,7 +1226,7 @@ function App() {
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
                       <span>Bandeira Casa (Auto)</span>
-                      {newJogo.flag_a && newJogo.flag_a.length === 2 && (
+                      {newJogo.flag_a && newJogo.flag_a.length >= 2 && (
                         <img src={`https://flagcdn.com/w20/${newJogo.flag_a}.png`} alt="flag" className="h-3 rounded" />
                       )}
                     </span>
@@ -1265,7 +1265,7 @@ function App() {
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
                       <span>Bandeira Fora (Auto)</span>
-                      {newJogo.flag_b && newJogo.flag_b.length === 2 && (
+                      {newJogo.flag_b && newJogo.flag_b.length >= 2 && (
                         <img src={`https://flagcdn.com/w20/${newJogo.flag_b}.png`} alt="flag" className="h-3 rounded" />
                       )}
                     </span>
