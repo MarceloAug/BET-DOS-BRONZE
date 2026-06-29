@@ -930,13 +930,13 @@ function App() {
 
                         {/* Placar Real / Inputs */}
                         <div className="flex items-center justify-center gap-2.5 shrink-0 py-0">
-                          <div className="flex flex-col items-center gap-2">
+                          <div className="flex flex-col items-center gap-2 w-full">
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-black/40 px-2 py-0.5 rounded-full border border-white/5">
                               Placar Real
                             </span>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex flex-col items-center gap-1.5 w-full">
                               {isFinished ? (
-                                <>
+                                <div className="flex items-center gap-1.5">
                                   <div className="w-14 h-14 bg-black/50 border border-zinc-700/50 rounded-2xl flex items-center justify-center font-title text-2xl font-black text-zinc-400">
                                     {golsRealA !== null ? golsRealA : '-'}
                                   </div>
@@ -946,33 +946,35 @@ function App() {
                                   </div>
                                   
                                   {golsRealA === golsRealB && jogo.penaltis_vencedor && (
-                                    <div className="absolute -bottom-7 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                    <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap z-10 shadow-lg">
                                       Venceu Pênaltis: {jogo.penaltis_vencedor === 'A' ? jogo.time_a : jogo.time_b}
                                     </div>
                                   )}
-                                </>
+                                </div>
                               ) : (
-                                <>
-                                  <input 
-                                    type="number" 
-                                    min="0"
-                                    className="w-14 h-14 bg-emerald-400/5 border border-emerald-400/30 rounded-2xl text-center font-title text-2xl font-black text-emerald-400 outline-none transition-all focus:border-emerald-400 focus:bg-emerald-400/10 hover:border-emerald-400/60"
-                                    placeholder="-"
-                                    value={golsRealA !== null ? golsRealA : ''}
-                                    onChange={(e) => handleSaveRealScore(jogo.id, e.target.value, golsRealB !== null ? golsRealB : '')}
-                                  />
-                                  <span className="text-[12px] font-bold text-slate-500 uppercase tracking-widest px-2">x</span>
-                                  <input 
-                                    type="number" 
-                                    min="0"
-                                    className="w-14 h-14 bg-emerald-400/5 border border-emerald-400/30 rounded-2xl text-center font-title text-2xl font-black text-emerald-400 outline-none transition-all focus:border-emerald-400 focus:bg-emerald-400/10 hover:border-emerald-400/60"
-                                    placeholder="-"
-                                    value={golsRealB !== null ? golsRealB : ''}
-                                    onChange={(e) => handleSaveRealScore(jogo.id, golsRealA !== null ? golsRealA : '', e.target.value, jogo.penaltis_vencedor)}
-                                  />
+                                <div className="flex flex-col items-center gap-2 w-full">
+                                  <div className="flex items-center gap-1.5">
+                                    <input 
+                                      type="number" 
+                                      min="0"
+                                      className="w-14 h-14 bg-emerald-400/5 border border-emerald-400/30 rounded-2xl text-center font-title text-2xl font-black text-emerald-400 outline-none transition-all focus:border-emerald-400 focus:bg-emerald-400/10 hover:border-emerald-400/60"
+                                      placeholder="-"
+                                      value={golsRealA !== null ? golsRealA : ''}
+                                      onChange={(e) => handleSaveRealScore(jogo.id, e.target.value, golsRealB !== null ? golsRealB : '', jogo.penaltis_vencedor)}
+                                    />
+                                    <span className="text-[12px] font-bold text-slate-500 uppercase tracking-widest px-2">x</span>
+                                    <input 
+                                      type="number" 
+                                      min="0"
+                                      className="w-14 h-14 bg-emerald-400/5 border border-emerald-400/30 rounded-2xl text-center font-title text-2xl font-black text-emerald-400 outline-none transition-all focus:border-emerald-400 focus:bg-emerald-400/10 hover:border-emerald-400/60"
+                                      placeholder="-"
+                                      value={golsRealB !== null ? golsRealB : ''}
+                                      onChange={(e) => handleSaveRealScore(jogo.id, golsRealA !== null ? golsRealA : '', e.target.value, jogo.penaltis_vencedor)}
+                                    />
+                                  </div>
                                   
                                   {golsRealA !== null && golsRealB !== null && golsRealA == golsRealB && !jogo.rodada.includes('Rodada') && (
-                                    <div className="w-full flex flex-col gap-1 mt-2 items-center absolute -bottom-14">
+                                    <div className="w-full flex flex-col gap-1 items-center bg-black/20 p-2 rounded-xl border border-white/5">
                                       <span className="text-[10px] font-bold text-slate-400 uppercase">Vencedor nos Pênaltis</span>
                                       <div className="flex gap-2">
                                         <button 
@@ -992,7 +994,7 @@ function App() {
                                       </div>
                                     </div>
                                   )}
-                                </>
+                                </div>
                               )}
                             </div>
                             
