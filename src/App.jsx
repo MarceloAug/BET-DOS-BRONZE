@@ -241,11 +241,11 @@ function App() {
     }
   };
 
-  const handleEditPalpite = (jogoId, participanteId, golsA, golsB) => {
+  const handleEditPalpite = (jogoId, participanteId, golsA, golsB, penaltisVencedor) => {
     const key = `${jogoId}-${participanteId}`;
     setDraftPalpites(prev => ({
       ...prev,
-      [key]: { gols_a: golsA !== null ? golsA : '', gols_b: golsB !== null ? golsB : '' }
+      [key]: { gols_a: golsA !== null ? golsA : '', gols_b: golsB !== null ? golsB : '', penaltis_vencedor: penaltisVencedor || null }
     }));
     setEditingPalpites(prev => {
       const next = new Set(prev);
@@ -269,19 +269,21 @@ function App() {
   };
 
   // Salvar Placar Real (apenas gols, não finaliza a partida)
-  const handleSaveRealScore = async (jogoId, golsA, golsB) => {
+  const handleSaveRealScore = async (jogoId, golsA, golsB, penaltisVencedor = null) => {
     const parsedA = golsA === '' ? null : parseInt(golsA);
     const parsedB = golsB === '' ? null : parseInt(golsB);
+    let finalPenaltis = penaltisVencedor;
+    if (parsedA !== parsedB) finalPenaltis = null;
 
     // OPTIMISTIC UPDATE LOCAL: Atualiza instantaneamente os gols
     setJogos(prev => prev.map(j => 
-      j.id === jogoId ? { ...j, gols_a: parsedA, gols_b: parsedB } : j
+      j.id === jogoId ? { ...j, gols_a: parsedA, gols_b: parsedB, penaltis_vencedor: finalPenaltis } : j
     ));
 
     try {
       const { error } = await supabase
         .from('jogos')
-        .update({ gols_a: parsedA, gols_b: parsedB })
+        .update({ gols_a: parsedA, gols_b: parsedB, penaltis_vencedor: finalPenaltis })
         .eq('id', jogoId);
 
       if (error) throw error;
@@ -1002,6 +1004,7 @@ function App() {
                             
                             const displayA = draft?.gols_a !== undefined ? draft.gols_a : (palpite?.gols_a !== null ? palpite?.gols_a : '');
                             const displayB = draft?.gols_b !== undefined ? draft.gols_b : (palpite?.gols_b !== null ? palpite?.gols_b : '');
+                            const displayPens = draft?.penaltis_vencedor !== undefined ? draft.penaltis_vencedor : (palpite?.penaltis_vencedor || null);
 
                             let ptsBadge = null;
                             if (isFinished && palpite && palpite.gols_a !== null && palpite.gols_b !== null) {
