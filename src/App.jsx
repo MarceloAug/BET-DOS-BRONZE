@@ -976,18 +976,18 @@ function App() {
                                   {golsRealA !== null && golsRealB !== null && golsRealA == golsRealB && !jogo.rodada.includes('Rodada') && (
                                     <div className="w-full flex flex-col gap-1 items-center bg-black/20 p-2 rounded-xl border border-white/5">
                                       <span className="text-[10px] font-bold text-slate-400 uppercase">Vencedor nos Pênaltis</span>
-                                      <div className="flex gap-2">
+                                      <div className="flex flex-col gap-1.5 w-full mt-1">
                                         <button 
                                           type="button"
                                           onClick={() => handleSaveRealScore(jogo.id, golsRealA, golsRealB, 'A')}
-                                          className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${jogo.penaltis_vencedor === 'A' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/10 hover:bg-white/5'}`}
+                                          className={`w-full py-1.5 rounded-lg text-xs font-bold border transition-colors ${jogo.penaltis_vencedor === 'A' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/10 hover:bg-white/5'}`}
                                         >
                                           {jogo.time_a}
                                         </button>
                                         <button 
                                           type="button"
                                           onClick={() => handleSaveRealScore(jogo.id, golsRealA, golsRealB, 'B')}
-                                          className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${jogo.penaltis_vencedor === 'B' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/10 hover:bg-white/5'}`}
+                                          className={`w-full py-1.5 rounded-lg text-xs font-bold border transition-colors ${jogo.penaltis_vencedor === 'B' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/10 hover:bg-white/5'}`}
                                         >
                                           {jogo.time_b}
                                         </button>
@@ -1180,18 +1180,18 @@ function App() {
                                       {displayA !== '' && displayB !== '' && displayA == displayB && !jogo.rodada.includes('Rodada') && (
                                         <div className="flex flex-col items-center mt-1 pb-1 gap-1">
                                           <span className="text-[9px] uppercase font-bold text-slate-400">Vence nos Pênaltis</span>
-                                          <div className="flex gap-2">
+                                          <div className="flex flex-col gap-1.5 w-full mt-1">
                                             <button 
                                               type="button"
                                               onClick={() => handleDraftChange(jogo.id, friend.id, 'penaltis_vencedor', 'A')}
-                                              className={`px-3 py-0.5 rounded text-[10px] font-bold border transition-colors ${displayPens === 'A' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/5 hover:bg-white/5'}`}
+                                              className={`w-full py-1.5 rounded-lg text-[10px] font-bold border transition-colors ${displayPens === 'A' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/5 hover:bg-white/5'}`}
                                             >
                                               {jogo.time_a}
                                             </button>
                                             <button 
                                               type="button"
                                               onClick={() => handleDraftChange(jogo.id, friend.id, 'penaltis_vencedor', 'B')}
-                                              className={`px-3 py-0.5 rounded text-[10px] font-bold border transition-colors ${displayPens === 'B' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/5 hover:bg-white/5'}`}
+                                              className={`w-full py-1.5 rounded-lg text-[10px] font-bold border transition-colors ${displayPens === 'B' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/5 hover:bg-white/5'}`}
                                             >
                                               {jogo.time_b}
                                             </button>
