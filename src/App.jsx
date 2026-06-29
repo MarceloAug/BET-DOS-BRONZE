@@ -1138,7 +1138,7 @@ function App() {
                                   </div>
                                 ) : (
                                   isDrafting ? (
-                                    <div className="flex flex-col gap-1 items-center justify-center shrink-0 w-full">
+                                    <div className="flex flex-col gap-1 items-center justify-center shrink-0">
                                       <div className="flex items-center justify-center gap-1.5 shrink-0">
                                         <input 
                                           type="number"
@@ -1178,7 +1178,7 @@ function App() {
                                       </div>
                                       
                                       {displayA !== '' && displayB !== '' && displayA == displayB && !jogo.rodada.includes('Rodada') && (
-                                        <div className="flex flex-col items-center mt-1 pb-1 gap-1 w-full">
+                                        <div className="flex flex-col items-center mt-1 pb-1 gap-1">
                                           <span className="text-[9px] uppercase font-bold text-slate-400">Vence nos Pênaltis</span>
                                           <div className="flex gap-2">
                                             <button 
@@ -1200,7 +1200,7 @@ function App() {
                                       )}
                                     </div>
                                   ) : (
-                                    <div className="flex flex-col items-center justify-center gap-1 shrink-0 w-full">
+                                    <div className="flex flex-col items-center justify-center gap-1 shrink-0">
                                       <div className="flex items-center justify-center gap-2">
                                         <div className="font-title text-sm font-bold bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 text-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.15)] flex items-center gap-1.5">
                                           <Check size={12} className="text-emerald-400/70" />
