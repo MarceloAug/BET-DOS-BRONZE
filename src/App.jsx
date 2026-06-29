@@ -340,6 +340,11 @@ function App() {
       return;
     }
 
+    if (isFinished && jogo.gols_a === jogo.gols_b && !jogo.rodada.includes('Rodada') && !jogo.penaltis_vencedor) {
+      showToast('Selecione o vencedor dos pênaltis antes de finalizar.', 'error');
+      return;
+    }
+
     setJogos(prev => prev.map(j => j.id === jogoId ? { ...j, encerrado: isFinished } : j));
     
     try {
@@ -936,6 +941,12 @@ function App() {
                                   <div className="w-14 h-14 bg-black/50 border border-zinc-700/50 rounded-2xl flex items-center justify-center font-title text-2xl font-black text-zinc-400">
                                     {golsRealB !== null ? golsRealB : '-'}
                                   </div>
+                                  
+                                  {golsRealA === golsRealB && jogo.penaltis_vencedor && (
+                                    <div className="absolute -bottom-7 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                      Venceu Pênaltis: {jogo.penaltis_vencedor === 'A' ? jogo.time_a : jogo.time_b}
+                                    </div>
+                                  )}
                                 </>
                               ) : (
                                 <>
