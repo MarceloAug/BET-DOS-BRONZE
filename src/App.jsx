@@ -520,6 +520,30 @@ function App() {
               }
             }
           }
+
+          // Mata-Mata Penaltis Bonus
+          if (palpiteA !== null && palpiteB !== null) {
+            const realDiff = realA - realB;
+            const palpiteDiff = palpiteA - palpiteB;
+            const realHadPens = (realDiff === 0 && jogo.penaltis_vencedor);
+            const userGuessedPens = (palpiteDiff === 0 && p.penaltis_vencedor);
+            
+            if (realHadPens) {
+              const realAdvancing = jogo.penaltis_vencedor; // 'A' ou 'B'
+              if (userGuessedPens) {
+                if (p.penaltis_vencedor === realAdvancing) {
+                  map[p.participante_id].pontos += 1;
+                  map[p.participante_id].penaltis = (map[p.participante_id].penaltis || 0) + 1;
+                }
+              } else {
+                const userAdvancing = palpiteDiff > 0 ? 'A' : (palpiteDiff < 0 ? 'B' : null);
+                if (userAdvancing === realAdvancing) {
+                  map[p.participante_id].pontos += 1;
+                  map[p.participante_id].vencedores += 1;
+                }
+              }
+            }
+          }
         }
       });
 
@@ -1007,7 +1031,18 @@ function App() {
                             const displayPens = draft?.penaltis_vencedor !== undefined ? draft.penaltis_vencedor : (palpite?.penaltis_vencedor || null);
 
                             let ptsBadge = null;
+                            let pensBadge = null;
                             if (isFinished && palpite && palpite.gols_a !== null && palpite.gols_b !== null) {
+                              if (palpite.gols_a === palpite.gols_b && palpite.penaltis_vencedor && !jogo.rodada.includes('Rodada')) {
+                                const realAdvancing = jogo.gols_a === jogo.gols_b ? jogo.penaltis_vencedor : null;
+                                const isCorrectPen = realAdvancing === palpite.penaltis_vencedor;
+                                pensBadge = (
+                                  <div className={`absolute -top-2 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] font-bold shadow-md z-10 border ${isCorrectPen ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                                    {palpite.penaltis_vencedor === 'A' ? jogo.time_a.substring(0,3) : jogo.time_b.substring(0,3)} (P)
+                                  </div>
+                                );
+                              }
+                              
                               const realDiff = jogo.gols_a - jogo.gols_b;
                               const predDiff = palpite.gols_a - palpite.gols_b;
                               const realWinner = Math.sign(realDiff);
@@ -1054,7 +1089,8 @@ function App() {
 
                                 {isFinished || isLocked ? (
                                   // Travado após encerrar jogo ou bloqueado
-                                  <div className="flex items-center justify-center shrink-0">
+                                  <div className="flex items-center justify-center shrink-0 relative">
+                                    {pensBadge}
                                     <div className="font-title text-xs font-bold bg-black/40 px-2.5 py-1 rounded-md border border-white/[0.03] text-slate-200">
                                       {palpite ? `${palpite.gols_a} x ${palpite.gols_b}` : '- x -'}
                                     </div>
@@ -1062,41 +1098,65 @@ function App() {
                                   </div>
                                 ) : (
                                   isDrafting ? (
-                                    <div className="flex items-center justify-center gap-1.5 shrink-0">
-                                      <input 
-                                        type="number"
-                                        min="0"
-                                        placeholder="-"
-                                        className="w-9 h-9 md:w-11 md:h-11 bg-black/50 border border-white/20 rounded-xl text-center font-title text-base font-bold text-slate-200 outline-none focus:border-emerald-400 focus:bg-emerald-400/10 transition-colors"
-                                        value={displayA}
-                                        onChange={(e) => handleDraftChange(jogo.id, friend.id, 'gols_a', e.target.value)}
-                                      />
-                                      <span className="text-[10px] md:text-xs font-bold text-slate-500">x</span>
-                                      <input 
-                                        type="number"
-                                        min="0"
-                                        placeholder="-"
-                                        className="w-9 h-9 md:w-11 md:h-11 bg-black/50 border border-white/20 rounded-xl text-center font-title text-base font-bold text-slate-200 outline-none focus:border-emerald-400 focus:bg-emerald-400/10 transition-colors"
-                                        value={displayB}
-                                        onChange={(e) => handleDraftChange(jogo.id, friend.id, 'gols_b', e.target.value)}
-                                      />
-                                      <button 
-                                        type="button"
-                                        onClick={() => handleConfirmPalpite(jogo.id, friend.id)}
-                                        className="w-8 h-8 flex items-center justify-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/30 transition-colors shrink-0"
-                                        title="Confirmar Palpite"
-                                      >
-                                        <Check size={14} />
-                                      </button>
-                                      {palpite && (
+                                    <div className="flex flex-col gap-1 items-center justify-center shrink-0 w-full">
+                                      <div className="flex items-center justify-center gap-1.5 shrink-0">
+                                        <input 
+                                          type="number"
+                                          min="0"
+                                          placeholder="-"
+                                          className="w-9 h-9 md:w-11 md:h-11 bg-black/50 border border-white/20 rounded-xl text-center font-title text-base font-bold text-slate-200 outline-none focus:border-emerald-400 focus:bg-emerald-400/10 transition-colors"
+                                          value={displayA}
+                                          onChange={(e) => handleDraftChange(jogo.id, friend.id, 'gols_a', e.target.value)}
+                                        />
+                                        <span className="text-[10px] md:text-xs font-bold text-slate-500">x</span>
+                                        <input 
+                                          type="number"
+                                          min="0"
+                                          placeholder="-"
+                                          className="w-9 h-9 md:w-11 md:h-11 bg-black/50 border border-white/20 rounded-xl text-center font-title text-base font-bold text-slate-200 outline-none focus:border-emerald-400 focus:bg-emerald-400/10 transition-colors"
+                                          value={displayB}
+                                          onChange={(e) => handleDraftChange(jogo.id, friend.id, 'gols_b', e.target.value)}
+                                        />
                                         <button 
                                           type="button"
-                                          onClick={() => handleCancelEdit(jogo.id, friend.id)}
-                                          className="w-8 h-8 flex items-center justify-center bg-zinc-500/20 text-zinc-400 border border-zinc-500/30 rounded-lg hover:bg-zinc-500/30 hover:text-zinc-200 transition-colors shrink-0"
-                                          title="Cancelar Edição"
+                                          onClick={() => handleConfirmPalpite(jogo.id, friend.id)}
+                                          className="w-8 h-8 flex items-center justify-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/30 transition-colors shrink-0"
+                                          title="Confirmar Palpite"
                                         >
-                                          <X size={14} />
+                                          <Check size={14} />
                                         </button>
+                                        {palpite && (
+                                          <button 
+                                            type="button"
+                                            onClick={() => handleCancelEdit(jogo.id, friend.id)}
+                                            className="w-8 h-8 flex items-center justify-center bg-zinc-500/20 text-zinc-400 border border-zinc-500/30 rounded-lg hover:bg-zinc-500/30 hover:text-zinc-200 transition-colors shrink-0"
+                                            title="Cancelar Edição"
+                                          >
+                                            <X size={14} />
+                                          </button>
+                                        )}
+                                      </div>
+                                      
+                                      {displayA !== '' && displayB !== '' && displayA == displayB && !jogo.rodada.includes('Rodada') && (
+                                        <div className="flex flex-col items-center mt-1 pb-1 gap-1 w-full">
+                                          <span className="text-[9px] uppercase font-bold text-slate-400">Vence nos Pênaltis</span>
+                                          <div className="flex gap-2">
+                                            <button 
+                                              type="button"
+                                              onClick={() => handleDraftChange(jogo.id, friend.id, 'penaltis_vencedor', 'A')}
+                                              className={`px-3 py-0.5 rounded text-[10px] font-bold border transition-colors ${displayPens === 'A' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/5 hover:bg-white/5'}`}
+                                            >
+                                              {jogo.time_a}
+                                            </button>
+                                            <button 
+                                              type="button"
+                                              onClick={() => handleDraftChange(jogo.id, friend.id, 'penaltis_vencedor', 'B')}
+                                              className={`px-3 py-0.5 rounded text-[10px] font-bold border transition-colors ${displayPens === 'B' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/5 hover:bg-white/5'}`}
+                                            >
+                                              {jogo.time_b}
+                                            </button>
+                                          </div>
+                                        </div>
                                       )}
                                     </div>
                                   ) : (
