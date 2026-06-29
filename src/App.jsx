@@ -812,7 +812,7 @@ function App() {
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/40 border border-white/10 text-slate-400">{eloName}</span>
                         </div>
                         <div className="text-[10px] text-slate-400 mt-0.5">
-                          ⚽ {user.exatos} exatos | 🎯 {user.diferenca} dif. | 🏆 {user.vencedores} venc.
+                          🎯 {user.exatos} exatos | ⚖️ {user.diferenca} dif. | ✅ {user.vencedores} venc. {user.penaltis > 0 ? `| 🏆 ${user.penaltis} pên.` : ''}
                         </div>
                         {user.ultimoPalpite && (
                           <div className="text-[8px] text-slate-500 mt-1 uppercase tracking-wider">
@@ -1075,7 +1075,7 @@ function App() {
                                 const realAdvancing = jogo.gols_a === jogo.gols_b ? jogo.penaltis_vencedor : null;
                                 const isCorrectPen = realAdvancing === palpite.penaltis_vencedor;
                                 pensBadge = (
-                                  <div className={`absolute -top-2 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] font-bold shadow-md z-10 border ${isCorrectPen ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                                  <div className={`px-1.5 py-0.5 rounded-full text-[8px] font-bold border mb-0.5 ${isCorrectPen ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
                                     {palpite.penaltis_vencedor === 'A' ? jogo.time_a.substring(0,3) : jogo.time_b.substring(0,3)} (P)
                                   </div>
                                 );
@@ -1127,12 +1127,14 @@ function App() {
 
                                 {isFinished || isLocked ? (
                                   // Travado após encerrar jogo ou bloqueado
-                                  <div className="flex items-center justify-center shrink-0 relative">
+                                  <div className="flex flex-col items-center justify-center shrink-0">
                                     {pensBadge}
-                                    <div className="font-title text-xs font-bold bg-black/40 px-2.5 py-1 rounded-md border border-white/[0.03] text-slate-200">
-                                      {palpite ? `${palpite.gols_a} x ${palpite.gols_b}` : '- x -'}
+                                    <div className="flex items-center">
+                                      <div className="font-title text-xs font-bold bg-black/40 px-2.5 py-1 rounded-md border border-white/[0.03] text-slate-200">
+                                        {palpite ? `${palpite.gols_a} x ${palpite.gols_b}` : '- x -'}
+                                      </div>
+                                      {ptsBadge}
                                     </div>
-                                    {ptsBadge}
                                   </div>
                                 ) : (
                                   isDrafting ? (
