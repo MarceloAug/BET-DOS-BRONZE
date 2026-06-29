@@ -200,9 +200,12 @@ function App() {
     
     let golsA = draft.gols_a !== undefined ? draft.gols_a : (existing ? existing.gols_a : '');
     let golsB = draft.gols_b !== undefined ? draft.gols_b : (existing ? existing.gols_b : '');
+    let pensVenc = draft.penaltis_vencedor !== undefined ? draft.penaltis_vencedor : (existing ? existing.penaltis_vencedor : null);
 
     const parsedA = golsA === '' ? null : parseInt(golsA);
     const parsedB = golsB === '' ? null : parseInt(golsB);
+    
+    if (parsedA !== parsedB) pensVenc = null;
 
     if (parsedA === null || parsedB === null || isNaN(parsedA) || isNaN(parsedB)) {
       showToast('Preencha os dois campos do palpite!', 'error');
@@ -213,7 +216,7 @@ function App() {
       const { error } = await supabase
         .from('palpites')
         .upsert(
-          { jogo_id: jogoId, participante_id: participanteId, gols_a: parsedA, gols_b: parsedB, updated_at: new Date().toISOString() }, 
+          { jogo_id: jogoId, participante_id: participanteId, gols_a: parsedA, gols_b: parsedB, penaltis_vencedor: pensVenc, updated_at: new Date().toISOString() }, 
           { onConflict: 'jogo_id, participante_id' }
         );
 
@@ -221,7 +224,7 @@ function App() {
       
       setPalpites(prev => {
         const filtered = prev.filter(p => !(p.jogo_id === jogoId && p.participante_id === participanteId));
-        return [...filtered, { jogo_id: jogoId, participante_id: participanteId, gols_a: parsedA, gols_b: parsedB }];
+        return [...filtered, { jogo_id: jogoId, participante_id: participanteId, gols_a: parsedA, gols_b: parsedB, penaltis_vencedor: pensVenc }];
       });
       
       setEditingPalpites(prev => {
