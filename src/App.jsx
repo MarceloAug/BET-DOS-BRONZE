@@ -936,13 +936,15 @@ function App() {
                             </span>
                             <div className="flex flex-col items-center gap-1.5 w-full">
                               {isFinished ? (
-                                <div className="flex items-center gap-1.5">
-                                  <div className="w-14 h-14 bg-black/50 border border-zinc-700/50 rounded-2xl flex items-center justify-center font-title text-2xl font-black text-zinc-400">
-                                    {golsRealA !== null ? golsRealA : '-'}
-                                  </div>
-                                  <span className="text-[12px] font-bold text-slate-600 uppercase tracking-widest px-2">x</span>
-                                  <div className="w-14 h-14 bg-black/50 border border-zinc-700/50 rounded-2xl flex items-center justify-center font-title text-2xl font-black text-zinc-400">
-                                    {golsRealB !== null ? golsRealB : '-'}
+                                <div className="flex flex-col items-center gap-2">
+                                  <div className="flex items-center gap-1.5">
+                                    <div className="w-14 h-14 bg-black/50 border border-zinc-700/50 rounded-2xl flex items-center justify-center font-title text-2xl font-black text-zinc-400">
+                                      {golsRealA !== null ? golsRealA : '-'}
+                                    </div>
+                                    <span className="text-[12px] font-bold text-slate-600 uppercase tracking-widest px-2">x</span>
+                                    <div className="w-14 h-14 bg-black/50 border border-zinc-700/50 rounded-2xl flex items-center justify-center font-title text-2xl font-black text-zinc-400">
+                                      {golsRealB !== null ? golsRealB : '-'}
+                                    </div>
                                   </div>
                                   
                                   {golsRealA === golsRealB && jogo.penaltis_vencedor && (
