@@ -954,8 +954,30 @@ function App() {
                                     className="w-14 h-14 bg-emerald-400/5 border border-emerald-400/30 rounded-2xl text-center font-title text-2xl font-black text-emerald-400 outline-none transition-all focus:border-emerald-400 focus:bg-emerald-400/10 hover:border-emerald-400/60"
                                     placeholder="-"
                                     value={golsRealB !== null ? golsRealB : ''}
-                                    onChange={(e) => handleSaveRealScore(jogo.id, golsRealA !== null ? golsRealA : '', e.target.value)}
+                                    onChange={(e) => handleSaveRealScore(jogo.id, golsRealA !== null ? golsRealA : '', e.target.value, jogo.penaltis_vencedor)}
                                   />
+                                  
+                                  {golsRealA !== null && golsRealB !== null && golsRealA == golsRealB && !jogo.rodada.includes('Rodada') && (
+                                    <div className="w-full flex flex-col gap-1 mt-2 items-center absolute -bottom-14">
+                                      <span className="text-[10px] font-bold text-slate-400 uppercase">Vencedor nos Pênaltis</span>
+                                      <div className="flex gap-2">
+                                        <button 
+                                          type="button"
+                                          onClick={() => handleSaveRealScore(jogo.id, golsRealA, golsRealB, 'A')}
+                                          className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${jogo.penaltis_vencedor === 'A' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/10 hover:bg-white/5'}`}
+                                        >
+                                          {jogo.time_a}
+                                        </button>
+                                        <button 
+                                          type="button"
+                                          onClick={() => handleSaveRealScore(jogo.id, golsRealA, golsRealB, 'B')}
+                                          className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${jogo.penaltis_vencedor === 'B' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/30 text-slate-400 border-white/10 hover:bg-white/5'}`}
+                                        >
+                                          {jogo.time_b}
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
                                 </>
                               )}
                             </div>
@@ -1160,19 +1182,35 @@ function App() {
                                       )}
                                     </div>
                                   ) : (
-                                    <div className="flex items-center justify-center gap-2 shrink-0">
-                                      <div className="font-title text-sm font-bold bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 text-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.15)] flex items-center gap-1.5">
-                                        <Check size={12} className="text-emerald-400/70" />
-                                        {palpite.gols_a} x {palpite.gols_b}
+                                    <div className="flex flex-col items-center justify-center gap-1 shrink-0 w-full">
+                                      <div className="flex items-center justify-center gap-2">
+                                        <div className="font-title text-sm font-bold bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 text-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.15)] flex items-center gap-1.5">
+                                          <Check size={12} className="text-emerald-400/70" />
+                                          {palpite.gols_a} x {palpite.gols_b}
+                                        </div>
+                                        <button 
+                                          type="button"
+                                          onClick={() => handleEditPalpite(jogo.id, friend.id, palpite.gols_a, palpite.gols_b, palpite.penaltis_vencedor)}
+                                          className="text-slate-500 hover:text-slate-300 transition-colors p-1"
+                                          title="Editar Palpite"
+                                        >
+                                          <Edit2 size={13} />
+                                        </button>
                                       </div>
-                                      <button 
-                                        type="button"
-                                        onClick={() => handleEditPalpite(jogo.id, friend.id, palpite.gols_a, palpite.gols_b)}
-                                        className="text-slate-500 hover:text-slate-300 transition-colors p-1"
-                                        title="Editar Palpite"
-                                      >
-                                        <Edit2 size={13} />
-                                      </button>
+                                      
+                                      {palpite.gols_a === palpite.gols_b && !jogo.rodada.includes('Rodada') && (
+                                        <div className="mt-1">
+                                          {palpite.penaltis_vencedor ? (
+                                            <div className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                                              Vence Pênaltis: {palpite.penaltis_vencedor === 'A' ? jogo.time_a : jogo.time_b}
+                                            </div>
+                                          ) : (
+                                            <div className="text-[10px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer" onClick={() => handleEditPalpite(jogo.id, friend.id, palpite.gols_a, palpite.gols_b, null)}>
+                                              ⚠️ Selecione quem vence os pênaltis!
+                                            </div>
+                                          )}
+                                        </div>
+                                      )}
                                     </div>
                                   )
                                 )}
