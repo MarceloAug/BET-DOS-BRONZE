@@ -1088,14 +1088,35 @@ function App() {
                               const realWinner = Math.sign(realDiff);
                               const predWinner = Math.sign(predDiff);
                               
+                              const realHadPens = (realDiff === 0 && jogo.penaltis_vencedor && !jogo.rodada.includes('Rodada'));
+                              const ultimateWinner = realHadPens ? (jogo.penaltis_vencedor === 'A' ? 1 : -1) : realWinner;
+                              
+                              let earnedPoints = 0;
+                              
                               if (jogo.gols_a === palpite.gols_a && jogo.gols_b === palpite.gols_b) {
-                                ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">+3</span>;
+                                earnedPoints = 3;
                               } else if (realWinner === predWinner) {
                                 if (realWinner !== 0 && realDiff === predDiff) {
-                                  ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-lime-500/10 text-lime-400 border border-lime-500/20">+2</span>;
+                                  earnedPoints = 2;
                                 } else {
-                                  ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-400/10 text-emerald-300 border border-emerald-400/20">+1</span>;
+                                  earnedPoints = 1;
                                 }
+                              } else if (realHadPens && predWinner !== 0 && predWinner === ultimateWinner) {
+                                earnedPoints = 1;
+                              }
+                              
+                              if (realHadPens && predWinner === 0 && palpite.penaltis_vencedor === jogo.penaltis_vencedor) {
+                                earnedPoints += 1;
+                              }
+                              
+                              if (earnedPoints === 4) {
+                                ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">+4</span>;
+                              } else if (earnedPoints === 3) {
+                                ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">+3</span>;
+                              } else if (earnedPoints === 2) {
+                                ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-lime-500/10 text-lime-400 border border-lime-500/20">+2</span>;
+                              } else if (earnedPoints === 1) {
+                                ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-emerald-400/10 text-emerald-300 border border-emerald-400/20">+1</span>;
                               } else {
                                 ptsBadge = <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md ml-1.5 shrink-0 bg-white/5 text-slate-500">0</span>;
                               }
@@ -1505,14 +1526,14 @@ function CampeaoView({ participantes, bolaoConfig, allTeams, avatars, supabase, 
     try {
       const { error } = await supabase
         .from('configs_bolao')
-        .upsert({
-          id: 1,
+        .update({
           campeao_real: adminReal.campeao,
           finalista_1_real: adminReal.f1,
           finalista_2_real: adminReal.f2
-        });
+        })
+        .eq('id', 1);
       if (error) throw error;
-      refreshData();
+      fetchData();
       alert('Resultados Reais Salvos!');
     } catch (err) {
       console.error(err);
@@ -1525,12 +1546,12 @@ function CampeaoView({ participantes, bolaoConfig, allTeams, avatars, supabase, 
     try {
       const { error } = await supabase
         .from('configs_bolao')
-        .upsert({
-          id: 1,
+        .update({
           apostas_travadas: !isLocked
-        });
+        })
+        .eq('id', 1);
       if (error) throw error;
-      refreshData();
+      fetchData();
     } catch (err) {
       console.error(err);
       alert('Erro ao travar/destravar.');
