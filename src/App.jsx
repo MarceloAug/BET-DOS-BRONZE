@@ -1533,7 +1533,7 @@ function CampeaoView({ participantes, bolaoConfig, allTeams, avatars, supabase, 
         })
         .eq('id', 1);
       if (error) throw error;
-      fetchData();
+      refreshData();
       alert('Resultados Reais Salvos!');
     } catch (err) {
       console.error(err);
@@ -1551,7 +1551,7 @@ function CampeaoView({ participantes, bolaoConfig, allTeams, avatars, supabase, 
         })
         .eq('id', 1);
       if (error) throw error;
-      fetchData();
+      refreshData();
     } catch (err) {
       console.error(err);
       alert('Erro ao travar/destravar.');
