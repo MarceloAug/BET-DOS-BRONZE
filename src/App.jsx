@@ -24,6 +24,8 @@ import imgMarcelo from './assets/Marcelo.png';
 import imgMarlon from './assets/Marlon.png';
 import imgThaina from './assets/Thaina.png';
 import logoImg from './assets/logo.png';
+import imgPodio from './assets/podio.png';
+import EstatisticasView from './EstatisticasView';
 
 const avatars = {
   'Marcelo': imgMarcelo,
@@ -477,7 +479,8 @@ function App() {
           diferenca: 0,
           vencedores: 0,
           palpitesFeitos: 0,
-          ultimoPalpite: null
+          ultimoPalpite: null,
+          historico: []
         };
       });
 
@@ -494,6 +497,8 @@ function App() {
           
         if (jogo && jogo.encerrado && jogo.gols_a !== null && jogo.gols_b !== null) {
           map[p.participante_id].palpitesFeitos += 1;
+          
+          let earnedPoints = 0;
 
           const realA = jogo.gols_a;
           const realB = jogo.gols_b;
@@ -501,7 +506,7 @@ function App() {
           const palpiteB = p.gols_b;
 
           if (realA === palpiteA && realB === palpiteB && palpiteA !== null && palpiteB !== null) {
-            map[p.participante_id].pontos += 3;
+            earnedPoints += 3;
             map[p.participante_id].exatos += 1;
           } 
           else if (palpiteA !== null && palpiteB !== null) {
@@ -514,16 +519,16 @@ function App() {
               if (realWinner !== 0) {
                 // Acertou a diferença de gols? (Ex: jogo 3x1 [diff 2], palpite 2x0 [diff 2])
                 if (realDiff === palpiteDiff) {
-                  map[p.participante_id].pontos += 2;
+                  earnedPoints += 2;
                   map[p.participante_id].diferenca += 1;
                 } else {
                   // Apenas acertou o vencedor
-                  map[p.participante_id].pontos += 1;
+                  earnedPoints += 1;
                   map[p.participante_id].vencedores += 1;
                 }
               } else {
                 // Empate, mas placar incorreto
-                map[p.participante_id].pontos += 1;
+                earnedPoints += 1;
                 map[p.participante_id].vencedores += 1; // Podemos considerar como acerto simples na contagem
               }
             }
@@ -533,25 +538,32 @@ function App() {
           if (palpiteA !== null && palpiteB !== null) {
             const realDiff = realA - realB;
             const palpiteDiff = palpiteA - palpiteB;
-            const realHadPens = (realDiff === 0 && jogo.penaltis_vencedor);
+            const realHadPens = (realDiff === 0 && jogo.penaltis_vencedor && !jogo.rodada.includes('Rodada'));
             const userGuessedPens = (palpiteDiff === 0 && p.penaltis_vencedor);
             
             if (realHadPens) {
               const realAdvancing = jogo.penaltis_vencedor; // 'A' ou 'B'
               if (userGuessedPens) {
                 if (p.penaltis_vencedor === realAdvancing) {
-                  map[p.participante_id].pontos += 1;
+                  earnedPoints += 1;
                   map[p.participante_id].penaltis = (map[p.participante_id].penaltis || 0) + 1;
                 }
               } else {
                 const userAdvancing = palpiteDiff > 0 ? 'A' : (palpiteDiff < 0 ? 'B' : null);
                 if (userAdvancing === realAdvancing) {
-                  map[p.participante_id].pontos += 1;
+                  earnedPoints += 1;
                   map[p.participante_id].vencedores += 1;
                 }
               }
             }
           }
+          
+          map[p.participante_id].pontos += earnedPoints;
+          map[p.participante_id].historico.push({
+            jogo,
+            palpite: p,
+            pontos: earnedPoints
+          });
         }
       });
 
@@ -616,7 +628,7 @@ function App() {
     const hasEmAndamento = jogos.some(j => !j.encerrado && j.flag_a && j.flag_a.includes('_LOCKED'));
     const activeRounds = rounds.filter(r => jogos.some(j => j.rodada === r && !j.encerrado && !(j.flag_a && j.flag_a.includes('_LOCKED'))));
     const hasEncerradas = jogos.some(j => j.encerrado);
-    return [...activeRounds, hasEmAndamento ? 'Em Andamento' : null, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
+    return ['Estatísticas', ...activeRounds, hasEmAndamento ? 'Em Andamento' : null, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
   };
   const displayTabs = calculateDisplayTabs();
 
@@ -852,7 +864,18 @@ function App() {
               ))}
             </div>
 
+            {/* Renderizar Estatísticas */}
+            {selectedRound === 'Estatísticas' && (
+              <EstatisticasView 
+                leaderboard={leaderboard} 
+                jogos={jogos} 
+                podioImg={imgPodio} 
+                avatars={avatars} 
+              />
+            )}
+
             {/* Listagem dos Jogos */}
+            {selectedRound !== 'Estatísticas' && (
             <div className="flex flex-col gap-6">
               {(() => {
                 let currentEncerradaRound = null;
@@ -1293,6 +1316,7 @@ function App() {
                 </div>
               )}
             </div>
+            )}
 
             {/* Painel do Administrador (Adicionar Jogo / Reset) */}
             <div className="bg-zinc-900/10 border border-dashed border-emerald-400/30 rounded-3xl p-5 md:p-6 shadow-xl mt-6">
