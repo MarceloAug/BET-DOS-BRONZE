@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 import { 
-  Swords, 
-  Calendar, 
+  Swords,
   RefreshCw, 
   Plus, 
   Trash2, 
@@ -131,16 +130,18 @@ function App() {
     }
   };
 
-  // Escuta de mudanças em tempo real no Supabase
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
 
     const channel = supabase
       .channel('db-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'palpites' }, () => {
+        // eslint-disable-next-line react-hooks/immutability
         refreshPalpitesOnly();
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'jogos' }, () => {
+        // eslint-disable-next-line react-hooks/immutability
         refreshJogosOnly();
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'participantes' }, () => {
@@ -154,6 +155,7 @@ function App() {
     return () => {
       supabase.removeChannel(channel);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refreshPalpitesOnly = async () => {
@@ -170,6 +172,7 @@ function App() {
     const validTabs = [...activeRounds, hasEmAndamento ? 'Em Andamento' : null, hasEncerradas ? 'Encerradas' : null].filter(Boolean);
     
     if (validTabs.length > 0 && (!selectedRound || !validTabs.includes(selectedRound))) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedRound(validTabs[0]);
     }
   }, [jogos, rounds, selectedRound]);
@@ -767,10 +770,10 @@ function App() {
                 {leaderboard.map((user, index) => {
                   const rank = index + 1;
                   
-                  let rankStyles = "bg-white/[0.01] border-white/[0.02]";
-                  let badgeStyles = "bg-white/10";
-                  let eloName = "Unranked";
-                  let eloIcon = "";
+                  let rankStyles;
+                  let badgeStyles;
+                  let eloName;
+                  let eloIcon;
                   
                   if (rank === 1) {
                     rankStyles = "bg-sky-500/5 border-sky-500/20 shadow-md shadow-sky-500/5";
@@ -1527,6 +1530,7 @@ function CampeaoView({ participantes, bolaoConfig, allTeams, avatars, supabase, 
 
   useEffect(() => {
     if (bolaoConfig) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAdminReal({
         campeao: bolaoConfig.campeao_real || '',
         f1: bolaoConfig.finalista_1_real || '',

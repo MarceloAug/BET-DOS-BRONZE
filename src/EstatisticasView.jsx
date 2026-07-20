@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Target, History, Star, Medal } from 'lucide-react';
 
 export default function EstatisticasView({ leaderboard, podioImg, avatars }) {
