@@ -854,36 +854,52 @@ function App() {
 
             {/* Listagem dos Jogos */}
             <div className="flex flex-col gap-6">
-              {jogos
-                .filter(j => {
-                  const isLocked = j.flag_a && j.flag_a.includes('_LOCKED');
-                  if (selectedRound === 'Encerradas') return j.encerrado;
-                  if (selectedRound === 'Em Andamento') return !j.encerrado && isLocked;
-                  return j.rodada === selectedRound && !j.encerrado && !isLocked;
-                })
-                .sort((a, b) => {
-                  if (selectedRound === 'Encerradas') {
-                    return new Date(b.data_hora) - new Date(a.data_hora);
-                  }
-                  if (a.grupo && b.grupo && a.grupo !== b.grupo) {
-                    return a.grupo.localeCompare(b.grupo);
-                  }
-                  return new Date(a.data_hora) - new Date(b.data_hora);
-                })
-                .map(jogo => {
-                  const golsRealA = jogo.gols_a !== null ? jogo.gols_a : '';
-                  const golsRealB = jogo.gols_b !== null ? jogo.gols_b : '';
-                  const isLocked = jogo.flag_a && jogo.flag_a.includes('_LOCKED');
-                  const isFinished = jogo.encerrado;
-                  const realFlagA = jogo.flag_a ? jogo.flag_a.replace('_LOCKED', '') : '';
+              {(() => {
+                let currentEncerradaRound = null;
+                return jogos
+                  .filter(j => {
+                    const isLocked = j.flag_a && j.flag_a.includes('_LOCKED');
+                    if (selectedRound === 'Encerradas') return j.encerrado;
+                    if (selectedRound === 'Em Andamento') return !j.encerrado && isLocked;
+                    return j.rodada === selectedRound && !j.encerrado && !isLocked;
+                  })
+                  .sort((a, b) => {
+                    if (selectedRound === 'Encerradas') {
+                      const order = { 'Final': 1, 'Semi Finais': 2, 'Quartas de Final': 3, 'Oitavas de Final': 4, 'Rodada 3': 5, 'Rodada 2': 6, 'Rodada 1': 7 };
+                      const oA = order[a.rodada] || 99;
+                      const oB = order[b.rodada] || 99;
+                      if (oA !== oB) return oA - oB;
+                      return new Date(b.data_hora) - new Date(a.data_hora);
+                    }
+                    if (a.grupo && b.grupo && a.grupo !== b.grupo) {
+                      return a.grupo.localeCompare(b.grupo);
+                    }
+                    return new Date(a.data_hora) - new Date(b.data_hora);
+                  })
+                  .map(jogo => {
+                    const golsRealA = jogo.gols_a !== null ? jogo.gols_a : '';
+                    const golsRealB = jogo.gols_b !== null ? jogo.gols_b : '';
+                    const isLocked = jogo.flag_a && jogo.flag_a.includes('_LOCKED');
+                    const isFinished = jogo.encerrado;
+                    const realFlagA = jogo.flag_a ? jogo.flag_a.replace('_LOCKED', '') : '';
+                    
+                    const showRoundHeader = selectedRound === 'Encerradas' && currentEncerradaRound !== jogo.rodada;
+                    if (showRoundHeader) currentEncerradaRound = jogo.rodada;
 
-                  return (
-                    <div 
-                      key={jogo.id} 
-                      className={`bg-zinc-900/10 border border-white/5 backdrop-blur-md rounded-3xl p-5 md:p-6 shadow-xl relative overflow-hidden border-l-4 ${
-                        isFinished ? 'border-l-zinc-600' : isLocked ? 'border-l-yellow-400' : 'border-l-emerald-400'
-                      }`}
-                    >
+                    return (
+                      <React.Fragment key={jogo.id}>
+                        {showRoundHeader && (
+                          <div className="w-full flex items-center justify-center mt-6 mb-2">
+                            <div className="bg-zinc-800/80 text-emerald-400 font-bold px-5 py-1.5 rounded-full border border-emerald-500/20 text-sm uppercase tracking-wider shadow-lg">
+                              {jogo.rodada}
+                            </div>
+                          </div>
+                        )}
+                        <div 
+                          className={`bg-zinc-900/10 border border-white/5 backdrop-blur-md rounded-3xl p-5 md:p-6 shadow-xl relative overflow-hidden border-l-4 ${
+                            isFinished ? 'border-l-zinc-600' : isLocked ? 'border-l-yellow-400' : 'border-l-emerald-400'
+                          }`}
+                        >
                       {/* Cabeçalho do Card */}
                       <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-400 pb-2 border-b border-white/5 mb-4">
                         <div className="flex items-center gap-1.5">
@@ -1261,8 +1277,10 @@ function App() {
                         </div>
                       </div>
                     </div>
+                    </React.Fragment>
                   );
-                })}
+                });
+              })()}
 
               {jogos.filter(j => {
                   const isLocked = j.flag_a && j.flag_a.includes('_LOCKED');
